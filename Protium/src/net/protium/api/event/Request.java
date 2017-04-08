@@ -4,10 +4,7 @@
  * Proprietary and confidential
  */
 
-package net.protium;
+package net.protium.api.event;
 
-public class Protium {
-    public static void Main(String args[]) {
-
-    }
+public interface Request {
 }
