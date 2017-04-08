@@ -23,8 +23,5 @@ class bar implements foo {
 
 public class Protium {
     public static void main(String[] args) {
-        bar a = new bar();
-        foo b = a;
-        //b.mine();
     }
 }
