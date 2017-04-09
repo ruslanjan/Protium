@@ -7,20 +7,6 @@
 package net.protium.core;
 
 
-interface foo {
-    void dohast();
-}
-
-class bar implements foo {
-    @Override
-    public void dohast() {
-
-    }
-    public void mine() {
-
-    }
-}
-
 public class Protium {
     public static void main(String[] args) {
     }
