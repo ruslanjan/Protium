@@ -6,6 +6,9 @@
 
 package net.protium.core.utils
 
+import net.protium.api.exceptions.FileError
+import net.protium.api.exceptions.FileOperation
+
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
@@ -38,6 +41,12 @@ class Functions {
 
 	static String pathToFile(String[] folder, String fileName, String extension)
 	{
-		implode(folder + [fileName], File.separator) + extension
+		String path = implode(folder + [fileName], File.separator) + extension
+
+		if(Files.exists(Paths.get(path))) {
+			path
+		} else {
+			throw new FileError(getClass(), FileOperation.OPEN, new File(path))
+		}
 	}
 }
