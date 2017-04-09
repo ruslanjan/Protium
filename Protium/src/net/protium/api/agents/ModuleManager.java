@@ -4,8 +4,10 @@
  * Proprietary and confidential
  */
 
-package net.protium.api.module;
+package net.protium.api.agents;
 
-public final class ModuleManager {
-    private  ModuleManager() {}
+import net.protium.api.module.Module;
+
+public interface ModuleManager {
+    Module getModule(String name);
 }
