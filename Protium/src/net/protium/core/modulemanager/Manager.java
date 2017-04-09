@@ -44,7 +44,7 @@ public class Manager implements ModuleManager {
         }
     }
 
-    public void loadModule(String name) throws IOException, ClassNotFoundException {
+    public void loadModule(String name) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         String[] moduleArr =
                 Functions.listFiles(
                         Functions.implode(Constant.getMOD_D(), File.separator),
@@ -66,12 +66,13 @@ public class Manager implements ModuleManager {
                 String className = je.getName().substring(0,je.getName().length()-6);
                 className = className.replace('/', '.');
                 Class c = cl.loadClass(className);
-
+                Module nw = ((Module)c.newInstance());
+                nw.onEnable();
             }
         }
     }
 
-    public void reloadModule(String name) throws IOException, ClassNotFoundException {
+    public void reloadModule(String name) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         unloadModule(name);
         loadModule(name);
     }
