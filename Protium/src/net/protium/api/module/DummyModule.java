@@ -12,12 +12,7 @@ import net.protium.api.event.Response;
 public class DummyModule implements Module {
 
     @Override
-    public void postInstall() {
-
-    }
-
-    @Override
-    public void init() {
+    public void onEnable() {
 
     }
 
@@ -27,7 +22,7 @@ public class DummyModule implements Module {
     }
 
     @Override
-    public void destroy() {
+    public void onDisable() {
 
     }
 }
