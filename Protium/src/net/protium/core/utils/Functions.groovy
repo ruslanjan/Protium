@@ -35,4 +35,9 @@ class Functions {
 
 		result as String[]
 	}
+
+	static String pathToFile(String[] folder, String fileName, String extension)
+	{
+		implode(folder + [fileName], File.separator) + extension
+	}
 }
