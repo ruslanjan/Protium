@@ -10,11 +10,9 @@ import net.protium.api.event.Request;
 import net.protium.api.event.Response;
 
 public interface Module {
-    void postInstall();
-
-    void init();
+    void onEnable();
 
     Response onRequest(Request request);
 
-    void destroy();
+    void onDisable();
 }
