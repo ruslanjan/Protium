@@ -54,8 +54,13 @@ public class Manager implements ModuleManager {
         JarFile jarFile = new JarFile(pathToJar);
         URL[] urls = { new URL("jar:file:" + pathToJar+"!/") };
         URLClassLoader cl = URLClassLoader.newInstance(urls);
-        JarEntry je = jarFile.getJarEntry(name);
-        System.err.println(je.getName());
+
+        Class c = cl.loadClass(name);
+        Module newModule = ((Module)c.newInstance());
+        newModule.onEnable();
+        modules.put(name, newModule);
+
+
         /*
         load all JarEntry class
         Enumeration<JarEntry> e = jarFile.entries();
