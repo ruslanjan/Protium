@@ -7,12 +7,11 @@
 package net.protium.core;
 
 
-import net.protium.core.webserver.servlet.MainServlet;
+import net.protium.core.modulemanager.Manager;
 
 public class Protium {
     public static void main(String[] args) {
-//        MainServlet servLet = new MainServlet();
-
-//        servLet.
+        Manager mn = new Manager();
+        mn.loadModule("testModule");
     }
 }

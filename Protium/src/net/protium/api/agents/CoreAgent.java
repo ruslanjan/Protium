@@ -9,13 +9,14 @@ package net.protium.api.agents;
 public final class CoreAgent {
     private CoreAgent() {}
 
-    private static ModuleManager manager;
+    private static ModuleManager manager = null;
 
     public static ModuleManager getModuleManager() {
         return manager;
     }
 
     public static void setModuleManager(ModuleManager mg) {
-        manager = mg;
+        if (mg == null)
+            manager = mg;
     }
 }
