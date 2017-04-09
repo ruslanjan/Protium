@@ -21,7 +21,7 @@ public class MainServlet extends HttpServlet {
         try {
             pw = resp.getWriter();
         } catch (IOException e) {
-            e.printStackTrace(); // кинуть в лог
+            e.printStackTrace();
         }
         if (pw != null) {
             pw.println("<H1>Hello, world! или Привет мир</H1>");

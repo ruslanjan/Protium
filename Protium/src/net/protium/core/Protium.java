@@ -14,16 +14,5 @@ import java.io.IOException;
 public class Protium {
     public static void main(String[] args) {
         Manager mn = new Manager();
-        try {
-            mn.loadModule("testModule");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
     }
 }
