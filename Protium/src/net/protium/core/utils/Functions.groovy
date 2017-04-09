@@ -27,6 +27,7 @@ class Functions {
 		return result.substring(0, result.length() - glue.length())
 	}
 
+	@SuppressWarnings("GroovyUnusedDeclaration")
 	static String[] listFiles(String folder, String extension) {
 		def result = Files.walk(Paths.get(folder))
 			.filter({ p ->  p.toString().endsWith(extension) })
