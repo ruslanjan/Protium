@@ -50,6 +50,7 @@ public class Manager implements ModuleManager {
                         Functions.implode(Constant.getMOD_D(), File.separator),
                         Constant.getMOD_EXT());
         for (String pathToJar:moduleArr) {
+            System.err.println(pathToJar);
             JarFile jarFile = new JarFile(pathToJar);
             Enumeration<JarEntry> e = jarFile.entries();
 
@@ -70,7 +71,7 @@ public class Manager implements ModuleManager {
         }
     }
 
-    public void reloadModule(String name) {
+    public void reloadModule(String name) throws IOException, ClassNotFoundException {
         unloadModule(name);
         loadModule(name);
     }

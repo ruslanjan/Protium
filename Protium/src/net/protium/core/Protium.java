@@ -9,9 +9,17 @@ package net.protium.core;
 
 import net.protium.core.modulemanager.Manager;
 
+import java.io.IOException;
+
 public class Protium {
     public static void main(String[] args) {
         Manager mn = new Manager();
-        mn.loadModule("testModule");
+        try {
+            mn.loadModule("testModule");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
