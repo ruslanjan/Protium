@@ -23,6 +23,8 @@ public class MainServlet extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace(); // кинуть в лог
         }
-        pw.println("<H1>Hello, world! или Привет мир</H1>");
+        if (pw != null) {
+            pw.println("<H1>Hello, world! или Привет мир</H1>");
+        }
     }
 }
