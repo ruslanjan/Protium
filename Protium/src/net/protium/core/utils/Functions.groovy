@@ -41,7 +41,8 @@ class Functions {
 
 	static String pathToFile(String[] folder, String fileName, String extension)
 	{
-		String path = implode(folder + [fileName], File.separator) + extension
+		folder += fileName
+		String path = implode(folder, File.separator) + extension
 
 		if(Files.exists(Paths.get(path))) {
 			path
