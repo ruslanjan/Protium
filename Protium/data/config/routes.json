@@ -1,0 +1,6 @@
+{
+	"/govno": {
+		"module": "HelloWorld",
+		"action": "helloWorld"
+	}
+}

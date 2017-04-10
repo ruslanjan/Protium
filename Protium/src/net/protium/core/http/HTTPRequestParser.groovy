@@ -38,7 +38,7 @@ class HTTPRequestParser {
         result
     }
 
-    HTTPData getData() {
+    HTTPRequest getData() {
         InputStream input = request.getInputStream()
         assert input != null
         byte[] buffer = new byte[1024]
@@ -49,7 +49,7 @@ class HTTPRequestParser {
                 break
             rawInput.append(new String(buffer))
         }
-        new HTTPData(rawInput.toString(), getHeaders())
+        new HTTPRequest(rawInput.toString(), getHeaders())
     }
 
 }

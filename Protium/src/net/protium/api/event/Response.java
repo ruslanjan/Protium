@@ -8,4 +8,10 @@ package net.protium.api.event;
 
 public interface Response {
 
+	String getContentType();
+	void setContentType(String type);
+
+	String getResponse();
+	void setResponse(String response);
+
 }
