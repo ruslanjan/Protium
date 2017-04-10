@@ -6,9 +6,6 @@
 
 package net.protium.core.utils
 
-import net.protium.api.exceptions.FileError
-import net.protium.api.exceptions.FileOperation
-
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
@@ -46,7 +43,7 @@ class Functions {
         if (Files.exists(Paths.get(path))) {
             path
         } else {
-            throw new FileError(getClass(), FileOperation.OPEN, new File(path))
+            throw new FileNotFoundException()
         }
     }
 

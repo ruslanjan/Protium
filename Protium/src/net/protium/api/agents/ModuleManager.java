@@ -10,4 +10,8 @@ import net.protium.api.module.Module;
 
 public interface ModuleManager {
     Module getModule(String name);
+
+    void unloadModule(String name);
+
+    void loadModule(String name);
 }
