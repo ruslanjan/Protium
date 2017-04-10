@@ -11,7 +11,6 @@ import java.nio.file.Paths
 import java.util.stream.Collectors
 
 class Functions {
-
     static String implode(String[] array, String glue) {
         StringBuilder builder = new StringBuilder()
 
