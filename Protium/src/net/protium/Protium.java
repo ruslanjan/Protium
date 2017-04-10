@@ -7,12 +7,9 @@
 package net.protium;
 
 import net.protium.api.config.ConfigReader;
-import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
-import net.protium.core.http.HTTPResponse;
 import net.protium.core.modulemanager.Manager;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
@@ -51,7 +48,7 @@ public class Protium extends AbstractHandler {
     }
 
     public static void main(String[] args) throws Exception {
-        Server server = new Server(8081);
+        Server server = new Server(8080);
         server.setHandler(new Protium());
 
         manager = new Manager();

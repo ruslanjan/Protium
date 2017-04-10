@@ -6,6 +6,8 @@
 
 package net.protium.api.agents;
 
+import net.protium.api.exceptions.AlreadyLoadedException;
+import net.protium.api.exceptions.NotLoadedException;
 import net.protium.api.module.Module;
 
 public interface ModuleManager {
@@ -14,4 +16,12 @@ public interface ModuleManager {
     void unloadModule(String name);
 
     void loadModule(String name);
+
+    void reloadModule(String name);
+
+    void enableModule(String name);
+
+    void disableModule(String name);
+
+    void restartModule(String name);
 }

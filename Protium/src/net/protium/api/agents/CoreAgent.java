@@ -16,7 +16,7 @@ public final class CoreAgent {
     }
 
     public static void setModuleManager(ModuleManager mg) {
-        if (mg == null)
+        if (manager == null)
             manager = mg;
     }
 }

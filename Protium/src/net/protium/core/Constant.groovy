@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package net.protium.api
+package net.protium.core
 
 class Constant {
 
@@ -12,5 +12,6 @@ class Constant {
     static String CONF_EXT = ".json"
     static String[] MOD_D = ["modules"]
     static String MOD_EXT = ".jar"
+    static String LOG_FOLDER = "logs/"
 
 }

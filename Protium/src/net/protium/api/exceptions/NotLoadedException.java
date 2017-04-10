@@ -10,10 +10,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Logger;
 
-public class AlreadyLoadedException extends Exception {
-    private static Logger logger = Logger.getLogger("AlreadyLoadedException");
+public class NotLoadedException extends Exception {
+    private static Logger logger = Logger.getLogger("NotLoadedException");
 
-    public AlreadyLoadedException() {
+    public NotLoadedException() {
         StringWriter trace = new StringWriter();
         printStackTrace(new PrintWriter(trace));
         logger.severe(trace.toString());

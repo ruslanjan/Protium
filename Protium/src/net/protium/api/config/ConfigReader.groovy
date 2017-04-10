@@ -7,7 +7,7 @@
 package net.protium.api.config
 
 import groovy.json.JsonSlurper
-import net.protium.api.Constant
+import net.protium.core.Constant
 import net.protium.api.exceptions.*
 import net.protium.core.utils.Functions
 
