@@ -33,7 +33,7 @@ public class Protium extends AbstractHandler {
 
 		HTTPRequestParser parser = new HTTPRequestParser(request);
 
-		HTTPRequest requestData = parser.getData();
+		net.protium.api.event.Request requestData = parser.getData();
 
 
 	    ConfigReader router = new ConfigReader("routes");
@@ -42,7 +42,7 @@ public class Protium extends AbstractHandler {
 	    String action = (String) router.get(ConfigReader.toPath(new String[]{target, "action"}));
 	    requestData.setAction(action);
 
-	    HTTPResponse responseData = (HTTPResponse) manager.getModule(module).onRequest(requestData);
+	    net.protium.api.event.Response responseData = manager.getModule(module).onRequest(requestData);
 
 	    response.setContentType(responseData.getContentType());
 	    response.getWriter().print(responseData.getResponse());
