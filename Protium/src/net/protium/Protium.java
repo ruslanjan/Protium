@@ -8,6 +8,8 @@ package net.protium;
 
 //import net.protium.core.modulemanager.Manager;
 
+import net.protium.core.http.HTTPData;
+import net.protium.core.http.HTTPRequestParser;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -16,8 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
 
 public class Protium extends AbstractHandler {
     @Override
@@ -27,24 +27,9 @@ public class Protium extends AbstractHandler {
                        HttpServletResponse response)
             throws IOException, ServletException {
 
-        InputStream input = request.getInputStream();
-        assert input != null;
-        byte[] buffer = new byte[1024];
-        StringBuilder rawInput = new StringBuilder("");
-        while (true) {
-            int gotBytes = input.read(buffer);
-            if(gotBytes <= 0)
-                break;
-            rawInput.append(new String(buffer));
-        }
+		HTTPRequestParser parser = new HTTPRequestParser(request);
 
-        System.out.println("POST data: " + rawInput.toString());
-
-        response.setContentType("text/html; charset=utf-8");
-
-        response.setStatus(200);
-
-        response.getWriter().println(rawInput.toString());
+		HTTPData requestData = parser.getData();
 
         baseRequest.setHandled(true);
     }
