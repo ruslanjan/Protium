@@ -32,8 +32,8 @@ class HTTPRequestParser {
             return this.headers
         def headerNames = request.getHeaderNames()
         Map result = new HashMap<>()
-        headerNames.each { item
-            result.put(item, request.get(item))
+        headerNames.each { item ->
+            result.put(item, request.getHeader(item as String))
         }
         result
     }

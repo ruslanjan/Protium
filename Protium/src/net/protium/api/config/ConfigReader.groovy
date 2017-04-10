@@ -7,6 +7,8 @@
 package net.protium.api.config
 
 import groovy.json.JsonSlurper
+import net.protium.api.exceptions.ArgumentException
+import net.protium.api.exceptions.FileReadException
 import net.protium.core.Constant
 import net.protium.api.exceptions.*
 import net.protium.core.utils.Functions
@@ -33,14 +35,17 @@ class ConfigReader {
             throw new FileNotFoundException()
         }
 
-        try {
-            FilePermission fp = new FilePermission(file.getAbsolutePath(), "read")
-            AccessController.checkPermission(fp)
-        } catch (Exception ignored) {
-            throw new FileReadException()
-        }
+//        try {
+//            FilePermission fp = new FilePermission(file.getAbsolutePath(), "read")
+//            AccessController.checkPermission(fp)
+//        } catch (Exception ignored) {
+//            throw new FileReadException()
+//        }
 
         data = openFile(file)
+
+        if(data == null)
+            throw new FileReadException()
     }
 
     static def openFile(File file) {

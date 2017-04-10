@@ -19,7 +19,6 @@ class HTTPRequest implements Request {
 
     HTTPRequest(String rawData, Map headers) {
         this.rawData = rawData
-        this.formData = null
         this.headers = headers
     }
 
