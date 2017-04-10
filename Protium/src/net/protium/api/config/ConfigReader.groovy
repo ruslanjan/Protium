@@ -30,14 +30,14 @@ class ConfigReader {
         file = new File(Functions.implode(filePath, File.separator))
 
         if (!file.exists()) {
-            throw new FileError(getClass(), FileOperation.OPEN, file)
+            throw new FileNotFoundException()
         }
 
         try {
             FilePermission fp = new FilePermission(file.getAbsolutePath(), "read")
             AccessController.checkPermission(fp)
         } catch (Exception ignored) {
-            throw new FileError(getClass(), FileOperation.READ, file)
+            throw new FileReadException()
         }
 
         data = openFile(file)
@@ -74,7 +74,7 @@ class ConfigReader {
             }
 
             if (path.length > 0 && current == null) {
-                throw new ArgumentError(getClass(), 'get', 'propertyPath', 'property path points to nonexistent property "' + currentPath + '"')
+                throw new ArgumentException()
             }
 
             if (path.length == 0) {

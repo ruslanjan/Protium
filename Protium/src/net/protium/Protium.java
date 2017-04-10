@@ -38,9 +38,8 @@ public class Protium extends AbstractHandler
         baseRequest.setHandled(true);
     }
 
-    public static void main( String[] args ) throws Exception
-    {
-        Server server = new Server(8081);
+    public static void main( String[] args ) throws Exception {
+        Server server = new Server(8080);
         server.setHandler(new Protium());
 
         server.start();

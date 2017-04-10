@@ -6,7 +6,5 @@
 
 package net.protium.api.exceptions;
 
-@SuppressWarnings("ALL")
-public enum FileOperation {
-    OPEN, READ, WRITE, DELETE
+public class AlreadyLoadedException extends Exception {
 }
