@@ -6,15 +6,12 @@
 
 package net.protium.api.config
 
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import net.protium.api.exceptions.ArgumentException
 import net.protium.api.exceptions.FileReadException
-import net.protium.core.Constant
-import net.protium.api.exceptions.*
+import net.protium.core.utils.Constant
 import net.protium.core.utils.Functions
-
-import java.security.AccessController
-
 
 class ConfigReader {
 
@@ -35,16 +32,9 @@ class ConfigReader {
             throw new FileNotFoundException()
         }
 
-//        try {
-//            FilePermission fp = new FilePermission(file.getAbsolutePath(), "read")
-//            AccessController.checkPermission(fp)
-//        } catch (Exception ignored) {
-//            throw new FileReadException()
-//        }
-
         data = openFile(file)
 
-        if(data == null)
+        if (data == null)
             throw new FileReadException()
     }
 
@@ -63,13 +53,9 @@ class ConfigReader {
 
         def current = data
 
-        String currentPath = ""
-
         while (1) {
             String siblingName = path[0]
             path = path.length > 1 ? path[1..-1] : []
-
-            currentPath += (currentPath.length() > 0 ? PATH_SEPARATOR : "") + siblingName
 
             if (siblingName.matches(INDEX_FIND_REGEX)) {
                 siblingName = (siblingName =~ INDEX_EXTRACT_REGEX)[0]
@@ -91,5 +77,60 @@ class ConfigReader {
     }
 
     @SuppressWarnings("GroovyUnusedDeclaration")
+    boolean checkPath(String propertyPath) {
+        String[] path = propertyPath.split(PATH_SEPARATOR_REGEX)
+
+        def current = data
+
+        while (1) {
+            String siblingName = path[0]
+            path = path.length > 1 ? path[1..-1] : []
+
+            if (siblingName.matches(INDEX_FIND_REGEX)) {
+                siblingName = (siblingName =~ INDEX_EXTRACT_REGEX)[0]
+                current = (current as ArrayList)[siblingName as int]
+            } else {
+                current = current[siblingName]
+            }
+
+            if (path.length > 0 && current == null) {
+                return false
+            }
+
+            if (path.length == 0) {
+                break
+            }
+        }
+
+        current != null
+    }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
     def get() { data }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    void set(String path, value) {
+        data = setRecursive(data, path.split(PATH_SEPARATOR_REGEX), value)
+        this
+    }
+
+    protected def setRecursive(object, String[] path, value) {
+        if (path.length > 0) {
+            object[path[0]] = setRecursive(object[path[0]], (path.length > 1 ? path[1..-1] : []) as String[], value)
+            object
+        } else {
+            value
+        }
+    }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    void commit(boolean prettyPrint = true) {
+        FileWriter writer = new FileWriter(file, false)
+        writer.write(
+                prettyPrint ?
+                        JsonOutput.prettyPrint(JsonOutput.toJson(data)) :
+                        JsonOutput.toJson(data)
+        )
+        writer.close()
+    }
 }

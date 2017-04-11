@@ -9,6 +9,8 @@ package net.protium;
 import net.protium.api.config.ConfigReader;
 import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.modulemanager.Manager;
+import net.protium.core.utils.Constant;
+import net.protium.core.utils.Functions;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -17,43 +19,65 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Protium extends AbstractHandler {
 	@SuppressWarnings("WeakerAccess")
 	public static Manager manager;
-    @Override
-    public void handle(String target,
-                       Request baseRequest,
-                       HttpServletRequest request,
-                       HttpServletResponse response)
-            throws IOException, ServletException {
+	private static Logger logger = Logger.getLogger(Protium.class.getName());
+
+	@Override
+	public void handle(String target,
+	                   Request baseRequest,
+	                   HttpServletRequest request,
+	                   HttpServletResponse response)
+		throws IOException, ServletException {
 
 		HTTPRequestParser parser = new HTTPRequestParser(request);
 
 		net.protium.api.event.Request requestData = parser.getData();
 
+		ConfigReader router = new ConfigReader("routes");
 
-	    ConfigReader router = new ConfigReader("routes");
+		if (!router.checkPath(target)) {
+			logger.log(Level.WARNING, "asked route " + target + " is not configured.");
 
-	    String module = (String) router.get(ConfigReader.toPath(new String[]{target, "module"}));
-	    String action = (String) router.get(ConfigReader.toPath(new String[]{target, "action"}));
-	    requestData.setAction(action);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.setContentType("text/plain");
+			response.getWriter().print(HttpServletResponse.SC_NOT_FOUND);
 
-	    net.protium.api.event.Response responseData = manager.getModule(module).onRequest(requestData);
+			baseRequest.setHandled(true);
+			return;
+		}
 
-	    response.setContentType(responseData.getContentType());
-	    response.getWriter().print(responseData.getResponse());
+		String module = (String) router.get(ConfigReader.toPath(new String[]{ target, "module" }));
+		String action = (String) router.get(ConfigReader.toPath(new String[]{ target, "action" }));
 
-        baseRequest.setHandled(true);
-    }
+		net.protium.api.event.Response responseData = manager.getModule(module).onRequest(requestData);
 
-    public static void main(String[] args) throws Exception {
-        Server server = new Server(8080);
-        server.setHandler(new Protium());
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.setContentType(responseData.getContentType());
+		response.getWriter().print(responseData.getResponse());
 
-        manager = new Manager();
+		baseRequest.setHandled(true);
+	}
 
-        server.start();
-        server.join();
-    }
+	public static void main(String[] args) throws Exception {
+		try {
+			logger.addHandler((new FileHandler(
+				Functions.createFile(Constant.LOG_D, Protium.class.getName(), Constant.LOG_EXT))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Server server = new Server(8081);
+		server.setHandler(new Protium());
+
+		manager = new Manager();
+		manager.loadModule("HelloWorld");
+
+		server.start();
+		server.join();
+	}
 }

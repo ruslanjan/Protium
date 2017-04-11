@@ -46,6 +46,12 @@ class Functions {
         }
     }
 
+    static String createFile(String[] folder, String fileName, String extension) {
+        folder += fileName
+        String path = implode(folder, File.separator) + extension
+        path
+    }
+
     static String getFileName(String filePath) {
         File target = new File(filePath)
         def arrPath = target.getName().split('\\.') as String[]
