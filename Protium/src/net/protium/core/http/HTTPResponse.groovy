@@ -6,7 +6,7 @@
 
 package net.protium.core.http
 
-import net.protium.api.event.Response
+import net.protium.api.events.Response
 
 /**
  * From: protium

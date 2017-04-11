@@ -6,8 +6,8 @@
 
 package net.protium.api.module;
 
-import net.protium.api.event.Request;
-import net.protium.api.event.Response;
+import net.protium.api.events.Request;
+import net.protium.api.events.Response;
 
 public interface Module {
     void onEnable();

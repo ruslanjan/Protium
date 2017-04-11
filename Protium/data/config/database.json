@@ -1,0 +1,17 @@
+{
+	"current": "testCon",
+	"available": {
+		"testCon": {
+			"url": "jdbc:postgresql://localhost:5432/postgres",
+			"user": "postgres",
+			"password": "00000000",
+			"driver": "org.postgresql.Driver"
+		},
+		"falseDBC": {
+			"url": "jdbc:postgresql://localhost:5432/postgre",
+			"user": "postgres",
+			"password": "00000000",
+			"driver": "org.postgresql.Driver"
+		}
+	}
+}

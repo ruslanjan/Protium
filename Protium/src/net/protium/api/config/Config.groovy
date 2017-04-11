@@ -13,7 +13,7 @@ import net.protium.api.exceptions.FileReadException
 import net.protium.core.utils.Constant
 import net.protium.core.utils.Functions
 
-class ConfigReader {
+class Config {
 
     static String PATH_SEPARATOR = '.'
     static String PATH_SEPARATOR_REGEX = '\\.'
@@ -24,7 +24,7 @@ class ConfigReader {
     protected def data
     protected File file
 
-    ConfigReader(configName) {
+    Config(configName) {
         String[] filePath = (Constant.CONF_D + [configName + Constant.CONF_EXT])
         file = new File(Functions.implode(filePath, File.separator))
 

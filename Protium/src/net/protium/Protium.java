@@ -6,7 +6,7 @@
 
 package net.protium;
 
-import net.protium.api.config.ConfigReader;
+import net.protium.api.config.Config;
 import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.modulemanager.Manager;
 import net.protium.core.utils.Constant;
@@ -37,9 +37,9 @@ public class Protium extends AbstractHandler {
 
 		HTTPRequestParser parser = new HTTPRequestParser(request);
 
-		net.protium.api.event.Request requestData = parser.getData();
+		net.protium.api.events.Request requestData = parser.getData();
 
-		ConfigReader router = new ConfigReader("routes");
+		Config router = new Config("routes");
 
 		if (!router.checkPath(target)) {
 			logger.log(Level.WARNING, "asked route " + target + " is not configured.");
@@ -52,10 +52,10 @@ public class Protium extends AbstractHandler {
 			return;
 		}
 
-		String module = (String) router.get(ConfigReader.toPath(new String[]{ target, "module" }));
-		String action = (String) router.get(ConfigReader.toPath(new String[]{ target, "action" }));
+		String module = (String) router.get(Config.toPath(new String[]{ target, "module" }));
+		String action = (String) router.get(Config.toPath(new String[]{ target, "action" }));
 
-		net.protium.api.event.Response responseData = manager.getModule(module).onRequest(requestData);
+		net.protium.api.events.Response responseData = manager.getModule(module).onRequest(requestData);
 
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType(responseData.getContentType());
