@@ -1,19 +1,14 @@
-/*
- * Copyright (C) 2017 Ruslan Jankurazov, Dmitry Ussoltsev - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- */
-
-package net.protium.api.config
+package net.protium.core.utils
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import net.protium.api.exceptions.ArgumentException
-import net.protium.api.exceptions.FileReadException
-import net.protium.core.utils.Constant
-import net.protium.core.utils.Functions
 
-class Config {
+class AbstractJSONParser {
+
+
+    protected def data
+    protected File file
 
     static String PATH_SEPARATOR = '.'
     static String PATH_SEPARATOR_REGEX = '\\.'
@@ -21,22 +16,6 @@ class Config {
     static String INDEX_FIND_REGEX = /\[[0-9]+?]/
     static String INDEX_EXTRACT_REGEX = /[0-9]+/
 
-    protected def data
-    protected File file
-
-    Config(configName) {
-        String[] filePath = (Constant.CONF_D + [configName + Constant.CONF_EXT])
-        file = new File(Functions.implode(filePath, File.separator))
-
-        if (!file.exists()) {
-            throw new FileNotFoundException()
-        }
-
-        data = openFile(file)
-
-        if (data == null)
-            throw new FileReadException()
-    }
 
     static def openFile(File file) {
         (new JsonSlurper()).parse(file)
@@ -125,6 +104,8 @@ class Config {
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void commit(boolean prettyPrint = true) {
+        if (file == null)
+            return
         FileWriter writer = new FileWriter(file, false)
         writer.write(
                 prettyPrint ?
@@ -133,4 +114,5 @@ class Config {
         )
         writer.close()
     }
+
 }

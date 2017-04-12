@@ -6,7 +6,7 @@
 
 package net.protium;
 
-import net.protium.api.config.Config;
+import net.protium.core.utils.Config;
 import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.modulemanager.Manager;
 import net.protium.core.utils.Constant;
