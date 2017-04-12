@@ -6,11 +6,7 @@
 
 package net.protium.core.utils
 
-import groovy.json.JsonOutput
 import net.protium.api.exceptions.FileReadException
-import net.protium.core.utils.AbstractJSONParser
-import net.protium.core.utils.Constant
-import net.protium.core.utils.Functions
 
 class Config extends AbstractJSONParser {
 
