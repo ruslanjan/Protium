@@ -14,8 +14,8 @@ import net.protium.api.events.Request
  * At: 10.04.17
  */
 class HTTPRequest implements Request {
-    String rawData, action
-    Map headers
+    private String rawData, action, url
+    private Map headers
 
     HTTPRequest(String rawData, Map headers) {
         this.rawData = rawData
@@ -26,7 +26,7 @@ class HTTPRequest implements Request {
     Map getSpecialData() {
         def arrData = rawData.split('&')
 
-        formData = new HashMap<>()
+        def formData = new HashMap<>()
 
         arrData.each { item ->
             item = item.split('=')
@@ -36,7 +36,7 @@ class HTTPRequest implements Request {
         formData
     }
 
-    @Override
+    @SuppressWarnings("GroovyUnusedDeclaration")
     Object setHeaders(Map headers) {
         this.headers = headers
     }
@@ -44,22 +44,25 @@ class HTTPRequest implements Request {
     @Override
     String getRawData() { rawData }
 
-    @Override
+    @SuppressWarnings("GroovyUnusedDeclaration")
     String setRawData(String data) { this.rawData = rawData }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    @Override
+    String getURL() { url }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    String setURL(String url) { this.url = url }
 
     @Override
     Map getHeaders() { headers }
 
-    @Override
-    void setAction(String action) {
-        this.action = action
-    }
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    void setAction(String action) { this.action = action }
 
     @Override
     String getAction() { action }
 
     @Override
-    String getMethod() {
-        return null
-    }
+    String getMethod() { null }
 }
