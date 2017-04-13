@@ -9,19 +9,15 @@ package net.protium.api.agents;
 import net.protium.api.exceptions.AlreadyLoadedException;
 import net.protium.api.exceptions.NotLoadedException;
 import net.protium.api.module.Module;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 public interface ModuleManager {
-    Module getModule(String name);
+    Module getModule(String name) throws NotFound;
 
-    void unloadModule(String name);
+    void reloadModules();
 
-    void loadModule(String name);
+    void enableModule(String name) throws NotFound;
 
-    void reloadModule(String name);
+    void disableModule(String name) throws NotFound;
 
-    void enableModule(String name);
-
-    void disableModule(String name);
-
-    void restartModule(String name);
 }

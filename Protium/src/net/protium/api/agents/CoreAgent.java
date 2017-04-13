@@ -6,6 +6,8 @@
 
 package net.protium.api.agents;
 
+import net.protium.core.utils.Config;
+
 public final class CoreAgent {
     private CoreAgent() {}
 
@@ -18,5 +20,9 @@ public final class CoreAgent {
     public static void setModuleManager(ModuleManager mg) {
         if (manager == null)
             manager = mg;
+    }
+
+    public Config getConfig(String configname) {
+        return new Config(configname);
     }
 }

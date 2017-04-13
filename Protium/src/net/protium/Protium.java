@@ -8,12 +8,13 @@ package net.protium;
 
 import net.protium.core.utils.Config;
 import net.protium.core.http.HTTPRequestParser;
-import net.protium.core.modulemanager.Manager;
+import net.protium.core.modulemanagement.Manager;
 import net.protium.core.utils.Constant;
 import net.protium.core.utils.Functions;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,12 @@ public class Protium extends AbstractHandler {
 		String module = (String) router.get(Config.toPath(new String[]{ target, "module" }));
 		String action = (String) router.get(Config.toPath(new String[]{ target, "action" }));
 
-		net.protium.api.events.Response responseData = manager.getModule(module).onRequest(requestData);
+		net.protium.api.events.Response responseData = null;
+		try {
+			responseData = manager.getModule(module).onRequest(requestData);
+		} catch (NotFound notFound) {
+			notFound.printStackTrace();
+		}
 
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType(responseData.getContentType());
@@ -66,8 +72,7 @@ public class Protium extends AbstractHandler {
 
 	public static void main(String[] args) throws Exception {
 		try {
-			logger.addHandler((new FileHandler(
-				Functions.createFile(Constant.LOG_D, Protium.class.getName(), Constant.LOG_EXT))));
+			logger.addHandler((new FileHandler(Functions.createFile(Constant.LOG_D, Protium.class.getName(), Constant.LOG_EXT))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -75,7 +80,6 @@ public class Protium extends AbstractHandler {
 		server.setHandler(new Protium());
 
 		manager = new Manager();
-		manager.loadModule("HelloWorld");
 
 		server.start();
 		server.join();
