@@ -6,8 +6,6 @@
 
 package net.protium.api.agents;
 
-import net.protium.api.exceptions.AlreadyLoadedException;
-import net.protium.api.exceptions.NotLoadedException;
 import net.protium.api.module.Module;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 

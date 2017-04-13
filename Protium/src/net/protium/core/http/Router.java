@@ -6,20 +6,17 @@
 
 package net.protium.core.http;
 
-import net.protium.api.events.Request;
 import net.protium.api.events.Response;
+import net.protium.api.exceptions.NotFoundException;
 import net.protium.core.modulemanagement.Manager;
 import net.protium.core.utils.Constant;
 import net.protium.core.utils.Functions;
 import net.protium.core.utils.JSONParser;
 import net.protium.core.utils.Pair;
-import org.apache.tools.ant.taskdefs.condition.Not;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
-import org.testng.internal.YamlParser;
+
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +24,6 @@ import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public class Router {
     private Manager manager;
@@ -63,7 +59,7 @@ public class Router {
         }
     }
 
-    Response redirect(HTTPRequest data) throws NotFound {
+    public Response redirect(HTTPRequest data) throws NotFoundException {
         String url = data.getURL();
         for (Map.Entry<String, List<Pair<String, String>>> entry : routes.entrySet()) {
             for (Pair<String, String> pattern : entry.getValue()) {
@@ -73,6 +69,6 @@ public class Router {
                 }
             }
         }
-        throw new NotFound();
+        throw new NotFoundException();
     }
 }
