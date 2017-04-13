@@ -14,7 +14,7 @@ class JSONParser extends AbstractJSONParser {
     }
 
     JSONParser(File file) {
-        file = jsonFile
+        this.file = file
         data = openFile(file)
     }
 
