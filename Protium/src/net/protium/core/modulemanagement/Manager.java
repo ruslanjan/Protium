@@ -9,6 +9,7 @@ package net.protium.core.modulemanagement;
 
 import net.protium.api.agents.CoreAgent;
 import net.protium.api.agents.ModuleManager;
+import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
 import net.protium.core.utils.Constant;
 import net.protium.core.utils.Functions;
@@ -92,10 +93,10 @@ public class Manager implements ModuleManager {
     }
 
     @Override
-    public void disableModule(String name) throws NotFound {
+    public void disableModule(String name) throws NotFoundException {
         if (!modules.containsKey(name)) {
             logger.log(Level.SEVERE, "no module with name: " + name);
-            throw new NotFound();
+            throw new NotFoundException();
         }
         if (getStatus(name)) {
             modules.get(name).onDisable();
@@ -107,10 +108,10 @@ public class Manager implements ModuleManager {
     }
 
     @Override
-    public void enableModule(String name) throws NotFound {
+    public void enableModule(String name) throws NotFoundException {
         if (!modules.containsKey(name)) {
             logger.log(Level.SEVERE, "no module with name: " + name);
-            throw new NotFound();
+            throw new NotFoundException();
         }
         if (!getStatus(name)) {
             modules.get(name).onEnable();
@@ -127,10 +128,10 @@ public class Manager implements ModuleManager {
     }
 
     @Override
-    public Module getModule(String name) throws NotFound {
+    public Module getModule(String name) throws NotFoundException {
         if (!modules.containsKey(name)) {
             logger.log(Level.SEVERE, "no module with name: " + name);
-            throw new NotFound();
+            throw new NotFoundException();
         }
         return modules.get(name);
     }

@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest
  */
 class HTTPRequestParser {
 
-    protected HttpServletRequest request
-    protected Map headers
+    private HttpServletRequest request
+    private Map headers
 
     HTTPRequestParser(HttpServletRequest request) {
         this.request = request
@@ -30,7 +30,7 @@ class HTTPRequestParser {
     private Map getHeaders() {
         if(this.headers != null)
             return this.headers
-        def headerNames = request.getHeaderNames()
+        def headerNames = request.getHeaderNames().toList()
         Map result = new HashMap<>()
         headerNames.each { item ->
             result.put(item, request.getHeader(item as String))
@@ -38,7 +38,7 @@ class HTTPRequestParser {
         result
     }
 
-    HTTPRequest getRequest() {
+    HTTPRequest getHTTPRequest() {
         InputStream input = request.getInputStream()
         assert input != null
         byte[] buffer = new byte[1024]
@@ -49,7 +49,7 @@ class HTTPRequestParser {
                 break
             rawInput.append(new String(buffer))
         }
-        new HTTPRequest(rawInput.toString(), getHeaders())
+        new HTTPRequest(rawInput.toString(), request.queryString, getHeaders())
     }
 
 }

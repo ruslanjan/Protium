@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package net.protium.storage
+package net.protium.core.storage
 
 import net.protium.core.utils.Constant
 
@@ -13,7 +13,7 @@ import java.nio.file.Paths
 
 /**
  * From: protium
- * Pkg: net.protium.storage
+ * Pkg: net.protium.core.storage
  * At: 13.04.17
  */
 @SuppressWarnings("GroovyUnusedDeclaration")

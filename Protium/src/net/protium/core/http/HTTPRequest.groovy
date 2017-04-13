@@ -14,19 +14,20 @@ import net.protium.api.events.Request
  * At: 10.04.17
  */
 class HTTPRequest implements Request {
-    private String rawData, action, url
+    private String rawData, action, url, queryString
     private Map headers
 
-    HTTPRequest(String rawData, Map headers) {
+    HTTPRequest(String rawData, String queryString, Map headers) {
         this.rawData = rawData
         this.headers = headers
+        this.queryString = queryString
     }
 
     @Override
-    Map getSpecialData() {
+    HashMap getSpecialData() {
         def arrData = rawData.split('&')
 
-        def formData = new HashMap<>()
+        HashMap formData = new HashMap<>()
 
         arrData.each { item ->
             item = item.split('=')
@@ -48,6 +49,23 @@ class HTTPRequest implements Request {
 
     @Override
     String getURL() { url }
+
+    @Override
+    String getRawQueryString() { queryString }
+
+    @Override
+    HashMap getQuery() {
+        def arrData = queryString.split('&')
+
+        HashMap queryData = new HashMap<>()
+
+        arrData.each { item ->
+            item = item.split('=')
+            queryData.put(item[0], item[1])
+        }
+
+        queryData
+    }
 
     String setURL(String url) { this.url = url }
 

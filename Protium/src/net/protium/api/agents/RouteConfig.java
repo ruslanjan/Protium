@@ -6,29 +6,28 @@
 
 package net.protium.api.agents;
 
-import net.protium.api.agents.Config;
 import net.protium.api.exceptions.FileReadException;
 import net.protium.core.utils.Constant;
+import net.protium.core.utils.Functions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class RouteConfig extends Config {
-    public RouteConfig(String configName) {
-        super(configName);
-    }
-    @Override
-    protected void init(String configName) throws FileReadException, FileNotFoundException {
-        String filePath = (Constant.ROUTE_D + configName + Constant.CONF_EXT);
-        file = new File(filePath);
 
-        if (!file.exists()) {
-            throw new FileNotFoundException();
-        }
+	public RouteConfig(String configName) {
+		super(configName);
+	}
 
-        data = openFile(file);
+	@Override
+	protected void init(String configName) throws FileReadException, FileNotFoundException {
+		String filePath = Functions.pathToFile(Constant.ROUTES_D, configName, ".json");
+		file = new File(filePath);
 
-        if (data == null)
-            throw new FileReadException();
-    }
+
+		data = openFile(file);
+
+		if (data == null)
+			throw new FileReadException();
+	}
 }

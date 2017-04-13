@@ -13,10 +13,10 @@ import net.protium.core.utils.Constant
 class Config extends AbstractJSONParser {
 
     Config(String configName) {
-        init(configName);
+        init(configName)
     }
 
-    protected void init(String configName)throws FileReadException, FileNotFoundException {
+    protected void init(String configName) throws FileReadException, FileNotFoundException {
         String filePath = (Constant.CONF_D + configName + Constant.CONF_EXT)
         file = new File(filePath)
 

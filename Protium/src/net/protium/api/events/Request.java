@@ -20,4 +20,8 @@ public interface Request {
 	String getAction();
 
 	String getURL();
+
+	String getRawQueryString();
+
+	Map getQuery();
 }
