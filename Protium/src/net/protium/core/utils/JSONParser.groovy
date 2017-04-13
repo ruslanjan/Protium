@@ -8,7 +8,6 @@ package net.protium.core.utils
 
 import groovy.json.JsonSlurper
 
-@SuppressWarnings("GroovyUnusedDeclaration")
 class JSONParser extends AbstractJSONParser {
 
     static def openStream(InputStream stream) {

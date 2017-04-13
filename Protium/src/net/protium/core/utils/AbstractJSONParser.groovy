@@ -25,12 +25,10 @@ class AbstractJSONParser {
         (new JsonSlurper()).parse(file)
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     static String toPath(String[] arrayPath) {
         Functions.implode(arrayPath, PATH_SEPARATOR)
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     def get(String propertyPath) {
         String[] path = propertyPath.split(PATH_SEPARATOR_REGEX)
 
@@ -123,7 +121,6 @@ class AbstractJSONParser {
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void commit(boolean prettyPrint = true) {
         if (file == null)
             return

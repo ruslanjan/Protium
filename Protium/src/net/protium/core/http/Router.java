@@ -29,12 +29,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class ModuleRouteManager {
+public class Router {
     private Manager manager;
     private static Logger logger;
     private Map<String, List<Pair<String, String>>> routes;
 
-    public ModuleRouteManager(Manager manager) {
+    public Router(Manager manager) {
         logger = Logger.getLogger(this.getClass().getName());
         try {
             logger.addHandler((new FileHandler(
@@ -49,12 +49,11 @@ public class ModuleRouteManager {
     public void reloadRoutes() {
         this.routes = new HashMap<>();
         String[] paths = Functions.listFiles(Constant.ROUTE_D, Constant.CONF_EXT);
-        for (String path:paths) {
+        for (String path : paths) {
             JSONParser jsonParser;
             jsonParser = new JSONParser((new File(path)));
-            Map<String, Map<String, String>> map = (Map)jsonParser.get();
-            for (Map.Entry<String, Map<String, String>> modulename : map.entrySet())
-            {
+            Map<String, Map<String, String>> map = (Map) jsonParser.get();
+            for (Map.Entry<String, Map<String, String>> modulename : map.entrySet()) {
                 List<Pair<String, String>> arr = new ArrayList<>();
                 routes.put(modulename.getKey(), arr);
                 for (Map.Entry<String, String> route : modulename.getValue().entrySet()) {
@@ -64,15 +63,13 @@ public class ModuleRouteManager {
         }
     }
 
-    /**
-     * @param url
-     * @return two Strings, first is module name and second is action name
-     */
-     Response getModule(String url, Request data) throws NotFound {
-        for (Map.Entry<String, List<Pair <String, String>>> entry : routes.entrySet()) {
-            for (Pair<String, String> pattern:entry.getValue()) {
+    Response redirect(HTTPRequest data) throws NotFound {
+        String url = data.getURL();
+        for (Map.Entry<String, List<Pair<String, String>>> entry : routes.entrySet()) {
+            for (Pair<String, String> pattern : entry.getValue()) {
                 if (Functions.matchRegex(entry.getKey(), url)) {
-                    return manager.getModule(entry.getKey()).onRequest(pattern.getRight(), data);
+                    data.setAction(pattern.getRight());
+                    return manager.getModule(entry.getKey()).onRequest(data);
                 }
             }
         }

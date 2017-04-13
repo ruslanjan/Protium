@@ -10,8 +10,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
 
-@SuppressWarnings("GroovyUnusedDeclaration")
-class Functions {
+
+final class Functions {
     static String implode(String[] array, String glue) {
         StringBuilder builder = new StringBuilder()
 
