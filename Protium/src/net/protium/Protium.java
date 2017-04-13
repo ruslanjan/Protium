@@ -6,7 +6,7 @@
 
 package net.protium;
 
-import net.protium.api.agents.Config;
+import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.modulemanagement.Manager;
 import net.protium.core.utils.Constant;
@@ -14,14 +14,12 @@ import net.protium.core.utils.Functions;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Protium extends AbstractHandler {
@@ -38,37 +36,11 @@ public class Protium extends AbstractHandler {
 
 		HTTPRequestParser parser = new HTTPRequestParser(request);
 
-		net.protium.api.events.Request requestData = parser.getData();
+		HTTPRequest requestData = parser.getRequest();
 
-		Config router = new Config("routes");
 
-		if (!router.checkPath(target)) {
-			logger.log(Level.WARNING, "asked route " + target + " is not configured.");
 
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			response.setContentType("text/plain");
-			response.getWriter().print(HttpServletResponse.SC_NOT_FOUND);
-
-			baseRequest.setHandled(true);
-			return;
 		}
-
-		String module = (String) router.get(Config.toPath(new String[]{ target, "module" }));
-		String action = (String) router.get(Config.toPath(new String[]{ target, "action" }));
-
-		net.protium.api.events.Response responseData = null;
-		try {
-			responseData = manager.getModule(module).onRequest(requestData);
-		} catch (NotFound notFound) {
-			notFound.printStackTrace();
-		}
-
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.setContentType(responseData.getContentType());
-		response.getWriter().print(responseData.getResponse());
-
-		baseRequest.setHandled(true);
-	}
 
 	public static void main(String[] args) throws Exception {
 		try {

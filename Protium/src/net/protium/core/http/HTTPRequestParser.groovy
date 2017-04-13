@@ -15,13 +15,14 @@ import javax.servlet.http.HttpServletRequest
  */
 class HTTPRequestParser {
 
-    HttpServletRequest request
-    Map headers
+    protected HttpServletRequest request
+    protected Map headers
 
     HTTPRequestParser(HttpServletRequest request) {
         this.request = request
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     String getContentType() {
         def metaData = request.getHeader("Content-Type")
         metaData
@@ -38,7 +39,7 @@ class HTTPRequestParser {
         result
     }
 
-    HTTPRequest getData() {
+    HTTPRequest getRequest() {
         InputStream input = request.getInputStream()
         assert input != null
         byte[] buffer = new byte[1024]

@@ -11,14 +11,13 @@ import java.util.Map;
 public interface Request {
 	String getMethod( );
 
-	String setRawData( String data );
 	String getRawData( );
 
 	Object getSpecialData( );
 
-	Object setHeaders( Map headers );
 	Object getHeaders( );
 
-	void setAction( String action );
 	String getAction();
+
+	String getURL();
 }
