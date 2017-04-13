@@ -83,6 +83,10 @@ class AbstractJSONParser {
         current != null
     }
 
+    HashMap getAsMap(String path) {
+        get(path) as HashMap
+    }
+
     @SuppressWarnings("GroovyUnusedDeclaration")
     def get() { data }
 

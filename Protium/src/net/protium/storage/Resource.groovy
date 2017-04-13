@@ -10,6 +10,7 @@ import net.protium.core.utils.Constant
 import net.protium.core.utils.Functions
 
 import javax.activation.MimeType
+import java.nio.file.Files
 
 /**
  * From: protium
@@ -23,11 +24,11 @@ class Resource {
     private byte[] rawData
     private MimeType mimeType
 
-    Resource(String name) {
+    Resource(String name) throws FileNotFoundException {
         reload(name)
     }
 
-    void reload(String name) {
+    void reload(String name)  throws FileNotFoundException {
         String path = (Constant.RES_D + name)
         file = new File(path)
         reload()
@@ -36,7 +37,7 @@ class Resource {
     void reload() {
         textData = file.text
         rawData = file.bytes
-        mimeType = new MimeType(textData)
+        mimeType = new MimeType(Files.probeContentType(file.toPath()))
     }
 
     String toString() { textData }
