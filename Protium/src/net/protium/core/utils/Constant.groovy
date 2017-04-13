@@ -14,4 +14,5 @@ class Constant {
     public static String LOG_D = "logs/"
     public static String LOG_EXT = ".log.xml"
     public static String RES_D = "data/res/"
+    public static String ROUTE_D = "routes/"
 }

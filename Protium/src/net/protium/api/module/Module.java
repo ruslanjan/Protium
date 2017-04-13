@@ -12,7 +12,7 @@ import net.protium.api.events.Response;
 public interface Module {
     void onEnable();
 
-    Response onRequest(Request request);
+    Response onRequest(String action, Request request);
 
     void onDisable();
 }

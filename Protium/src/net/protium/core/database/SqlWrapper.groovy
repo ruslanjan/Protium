@@ -7,7 +7,7 @@
 package net.protium.core.database
 
 import groovy.sql.Sql
-import net.protium.core.utils.Config
+import net.protium.api.agents.Config
 import net.protium.api.exceptions.ArgumentException
 import net.protium.api.exceptions.ConfigException
 

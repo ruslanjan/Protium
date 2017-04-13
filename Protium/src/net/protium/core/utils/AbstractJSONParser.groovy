@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2017 Ruslan Jankurazov, Dmitry Ussoltsev - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
 package net.protium.core.utils
 
 import groovy.json.JsonOutput
@@ -14,7 +20,6 @@ class AbstractJSONParser {
 
     static String INDEX_FIND_REGEX = /\[[0-9]+?]/
     static String INDEX_EXTRACT_REGEX = /[0-9]+/
-
 
     static def openFile(File file) {
         (new JsonSlurper()).parse(file)
