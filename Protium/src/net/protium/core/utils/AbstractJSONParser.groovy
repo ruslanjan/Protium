@@ -54,7 +54,6 @@ class AbstractJSONParser {
         current
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     boolean checkPath(String propertyPath) {
         String[] path = propertyPath.split(PATH_SEPARATOR_REGEX)
 
@@ -83,14 +82,28 @@ class AbstractJSONParser {
         current != null
     }
 
-    HashMap getAsMap(String path) {
+    HashMap getMap(String path) {
         get(path) as HashMap
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
+    String getString(String path) {
+        get(path) as String
+    }
+
+    ArrayList getArrayList(String path) {
+        get(path) as ArrayList
+    }
+
+    Integer getInteger(String path) {
+        get(path) as Integer
+    }
+
+    boolean getBoolean(String path) {
+        get(path) as boolean
+    }
+
     def get() { data }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void set(String path, value) {
         data = setRecursive(data, path.split(PATH_SEPARATOR_REGEX), value)
         this

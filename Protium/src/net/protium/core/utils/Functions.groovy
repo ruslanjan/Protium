@@ -9,6 +9,7 @@ package net.protium.core.utils
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
+
 @SuppressWarnings("GroovyUnusedDeclaration")
 class Functions {
     static String implode(String[] array, String glue) {
@@ -72,5 +73,9 @@ class Functions {
         def arrPath = target.getName().split('\\.') as String[]
         arrPath = arrPath.length > 1 ? arrPath[0..-2] : [arrPath[0]]
         implode(arrPath as String[], ".")
+    }
+
+    static boolean matchRegex(String regex, String needle) {
+        needle =~ regex
     }
 }

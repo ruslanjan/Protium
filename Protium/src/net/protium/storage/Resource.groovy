@@ -7,7 +7,6 @@
 package net.protium.storage
 
 import net.protium.core.utils.Constant
-import net.protium.core.utils.Functions
 
 import javax.activation.MimeType
 import java.nio.file.Files

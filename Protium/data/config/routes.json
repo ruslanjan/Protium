@@ -1,6 +1,14 @@
 {
-	"/govno": {
-		"module": "HelloWorld",
-		"action": "helloWorld"
+	"applet": {
+		"name": "SampleApplet",
+		"assignedIDs": [ 12, 1102, 35095, 3095, 329481 ],
+		"eventCreated": {
+			"invoker": {
+				"class": "MainApplet",
+				"method": "newApplet",
+				"args": ["common", "SampleApplet"]
+			},
+			"date": {}
+		}
 	}
 }
