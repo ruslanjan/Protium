@@ -11,8 +11,8 @@ import net.protium.api.exceptions.FileReadException
 class Config extends AbstractJSONParser {
 
     Config(String configName) {
-        String[] filePath = (Constant.CONF_D + [configName + Constant.CONF_EXT])
-        file = new File(Functions.implode(filePath, File.separator))
+        String filePath = (Constant.CONF_D + configName + Constant.CONF_EXT)
+        file = new File(filePath)
 
         if (!file.exists()) {
             throw new FileNotFoundException()

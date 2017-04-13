@@ -48,7 +48,7 @@ public class Manager implements ModuleManager {
 	@SuppressWarnings({ "WeakerAccess", "unused" })
 	private void loadAll( ) {
 		String[] modulesArr = Functions.listFiles(
-			Functions.implode(Constant.MOD_D, File.separator),
+			Constant.MOD_D,
 			Constant.MOD_EXT);
 		for (String path : modulesArr) {
 			try {

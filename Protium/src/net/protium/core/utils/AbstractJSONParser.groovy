@@ -6,7 +6,6 @@ import net.protium.api.exceptions.ArgumentException
 
 class AbstractJSONParser {
 
-
     protected def data
     protected File file
 

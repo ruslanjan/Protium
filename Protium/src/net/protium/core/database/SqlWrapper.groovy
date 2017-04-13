@@ -16,6 +16,7 @@ import net.protium.api.exceptions.ConfigException
  * Pkg: net.protium.core.database
  * At: 11.04.17
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 class SqlWrapper {
 
     private Sql sql

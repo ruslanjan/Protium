@@ -9,7 +9,7 @@ package net.protium.core.utils
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
-
+@SuppressWarnings("GroovyUnusedDeclaration")
 class Functions {
     static String implode(String[] array, String glue) {
         StringBuilder builder = new StringBuilder()
@@ -26,7 +26,6 @@ class Functions {
         return result.substring(0, result.length() - glue.length())
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     static String[] listFiles(String folder, String extension) {
         def result = Files.walk(Paths.get(folder))
                 .filter({ p -> p.toString().endsWith(extension) })
@@ -46,10 +45,26 @@ class Functions {
         }
     }
 
+    static String pathToFile(String folder, String fileName, String extension) {
+        def path = [folder, fileName] as String[]
+        path = implode(path, File.separator) + extension
+
+        if (Files.exists(Paths.get(path))) {
+            path
+        } else {
+            throw new FileNotFoundException()
+        }
+    }
+
     static String createFile(String[] folder, String fileName, String extension) {
         folder += fileName
         String path = implode(folder, File.separator) + extension
         path
+    }
+
+    static String createFile(String folder, String fileName, String extension) {
+        String[] path = [folder, fileName] as String[]
+        implode(path, File.separator) + extension
     }
 
     static String getFileName(String filePath) {
