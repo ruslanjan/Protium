@@ -22,7 +22,6 @@ class HTTPRequestParser {
         this.request = request
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     String getContentType() {
         def metaData = request.getHeader("Content-Type")
         metaData

@@ -16,6 +16,8 @@ public interface ModuleManager {
 
     void reloadModules();
 
+    boolean getStatus(String name) throws NotFound;
+
     void enableModule(String name) throws NotFound;
 
     void disableModule(String name) throws NotFound;

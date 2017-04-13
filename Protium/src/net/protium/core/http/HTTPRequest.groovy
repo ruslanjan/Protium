@@ -44,20 +44,16 @@ class HTTPRequest implements Request {
     @Override
     String getRawData() { rawData }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     String setRawData(String data) { this.rawData = rawData }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     @Override
     String getURL() { url }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     String setURL(String url) { this.url = url }
 
     @Override
     Map getHeaders() { headers }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void setAction(String action) { this.action = action }
 
     @Override

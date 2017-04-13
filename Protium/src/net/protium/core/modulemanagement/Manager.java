@@ -124,7 +124,8 @@ public class Manager implements ModuleManager {
         }
     }
 
-    private boolean getStatus(String name) {
+    @Override
+    public boolean getStatus(String name) {
         return moduleStatus.get(name);
     }
 
