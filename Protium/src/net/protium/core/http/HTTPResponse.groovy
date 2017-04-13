@@ -16,12 +16,12 @@ import net.protium.api.events.Response
 class HTTPResponse implements Response {
 
     String contentType, response
+    Integer status
 
     @Override
     String getContentType() { contentType }
 
-    @Override
-    void setContentType(String type) {
+    private void setContentType(String type) {
         contentType = type
     }
 
@@ -30,8 +30,12 @@ class HTTPResponse implements Response {
         response
     }
 
-    @Override
     void setResponse(String response) {
         this.response = response
+    }
+
+    @Override
+    Integer getStatus() {
+        status
     }
 }

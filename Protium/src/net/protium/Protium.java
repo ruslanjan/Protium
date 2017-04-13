@@ -6,8 +6,12 @@
 
 package net.protium;
 
+import net.protium.api.events.Response;
+import net.protium.api.exceptions.NotFoundException;
 import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
+import net.protium.core.http.HTTPResponse;
+import net.protium.core.http.Router;
 import net.protium.core.modulemanagement.Manager;
 import net.protium.core.utils.Constant;
 import net.protium.core.utils.Functions;
@@ -20,11 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Protium extends AbstractHandler {
-	@SuppressWarnings("WeakerAccess")
-	public static Manager manager;
+	@SuppressWarnings("FieldCanBeLocal")
+	private static Manager manager;
+	private static Router router;
 	private static Logger logger = Logger.getLogger(Protium.class.getName());
 
 	@Override
@@ -38,9 +44,28 @@ public class Protium extends AbstractHandler {
 
 		HTTPRequest requestData = parser.getRequest();
 
+		HTTPResponse responseData;
 
+		try {
+			responseData = (HTTPResponse) router.redirect(requestData);
+		} catch (NotFoundException e) {
+			logger.log(Level.WARNING, "404 Not Found: URL " + target, e);
 
+			baseRequest.setHandled(true);
+
+			response.setContentType("text/html; charset=utf-8");
+			response.getWriter().println("404");
+
+			return;
 		}
+
+		baseRequest.setHandled(true);
+
+		response.setContentType(responseData.getContentType());
+		response.getWriter().println(responseData.getResponse());
+		response.setContentLength(responseData.getResponse().length());
+		response.setStatus(responseData.getStatus());
+	}
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -52,7 +77,7 @@ public class Protium extends AbstractHandler {
 		server.setHandler(new Protium());
 
 		manager = new Manager();
-
+		router = new Router(manager);
 		server.start();
 		server.join();
 	}
