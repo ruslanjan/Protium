@@ -21,7 +21,7 @@ class HTTPResponse implements Response {
     @Override
     String getContentType() { contentType }
 
-    private void setContentType(String type) {
+    void setContentType(String type) {
         contentType = type
     }
 

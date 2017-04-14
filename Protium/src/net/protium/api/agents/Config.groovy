@@ -9,6 +9,7 @@ package net.protium.api.agents
 import net.protium.api.exceptions.FileReadException
 import net.protium.core.utils.AbstractJSONParser
 import net.protium.core.utils.Constant
+import net.protium.core.utils.Functions
 
 class Config extends AbstractJSONParser {
 
@@ -17,12 +18,9 @@ class Config extends AbstractJSONParser {
     }
 
     protected void init(String configName) throws FileReadException, FileNotFoundException {
-        String filePath = (Constant.CONF_D + configName + Constant.CONF_EXT)
-        file = new File(filePath)
+        String filePath = Functions.pathToFile(Constant.CONF_D, configName, Constant.CONF_EXT)
 
-        if (!file.exists()) {
-            throw new FileNotFoundException()
-        }
+        file = new File(filePath)
 
         data = openFile(file)
 

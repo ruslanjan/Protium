@@ -1,6 +1,6 @@
 {
-	"current": "testCon",
-	"available": {
+	"profile": "testCon",
+	"profiles": {
 		"testCon": {
 			"url": "jdbc:postgresql://localhost:5432/postgres",
 			"user": "postgres",

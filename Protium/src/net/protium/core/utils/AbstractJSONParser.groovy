@@ -6,6 +6,7 @@
 
 package net.protium.core.utils
 
+import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import net.protium.api.exceptions.ArgumentException
@@ -21,7 +22,7 @@ class AbstractJSONParser {
     static String INDEX_FIND_REGEX = /\[[0-9]+?]/
     static String INDEX_EXTRACT_REGEX = /[0-9]+/
 
-    static def openFile(File file) {
+    static def openFile(File file) throws JsonException {
         (new JsonSlurper()).parse(file)
     }
 

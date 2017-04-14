@@ -8,6 +8,7 @@ package net.protium.core.utils
 
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.regex.Matcher
 import java.util.stream.Collectors
 
 
@@ -77,6 +78,10 @@ final class Functions {
 
     static boolean matchRegex(String regex, String needle) {
         (needle =~ regex).matches()
+    }
+
+    static Matcher getMatcher(String regex, String needle) {
+        (needle =~ regex)
     }
 
     static Integer min(Integer a, Integer b) {

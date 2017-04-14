@@ -1,0 +1,16 @@
+{
+	"module1": {
+		"/module1/([0-9]{3,})/?": {
+			"action": "action1",
+			"args": [ "id" ]
+		},
+		"/module1/id-([0-9]{3,})-/": {
+			"action": "action1",
+			"args": [ "id" ]
+		},
+		"/module1/([0-9]{3,})/viewer/([a-zA-Z]+)": {
+			"action": "action1",
+			"args": [ "id", "word" ]
+		}
+	}
+}

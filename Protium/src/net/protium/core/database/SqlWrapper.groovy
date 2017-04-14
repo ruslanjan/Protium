@@ -33,8 +33,8 @@ class SqlWrapper {
     }
 
     void connect() {
-        String dbcName = conf.get("current") ?: "default"
-        dbc = conf.get(Config.toPath(["available", dbcName] as String[]))
+        String dbcName = conf.get("profile") ?: "default"
+        dbc = conf.get(Config.toPath(["profiles", dbcName] as String[]))
         if(dbc == null)
             throw new ConfigException()
         //noinspection GroovyAssignabilityCheck

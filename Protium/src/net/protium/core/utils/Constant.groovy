@@ -24,4 +24,5 @@ class Constant {
             "<b>OS</b>: ${System.getProperty('os.name')} ${System.getProperty('os.version')} ${System.getProperty('os.arch')} \n" +
             "<b>JVM</b>: ${System.getProperty('java.vm.name')} ${System.getProperty('java.version')}/${System.getProperty('java.vm.version')} by ${System.getProperty('java.vendor')}\n" +
             "Running on Protium ${VERSION}"
+    public static String HTML_CONTENT_TYPE = "text/html; charset=utf-8"
 }

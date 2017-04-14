@@ -12,22 +12,20 @@ public class module1 implements Module {
 	@Override
 	public Response onRequest(Request request) {
 
-		System.out.println("================");
-		System.out.println("MODULE1 TEST OUTPUT");
-		System.out.println("================");
+		String answer = request.getAction() + "\n<br>" +
+			request.getURL() + "\n<br>" +
+			request.getHeaders() + "\n<br>" +
+			request.getRawData() + "\n<br>" +
+			request.getRawQueryString() + "\n<br>" +
+			request.getOptions() + "\n<br>";
 
-		System.out.println(request.getAction());
-		System.out.println(request.getURL());
-		System.out.println(request.getHeaders());
-		System.out.println(request.getRawData());
-		System.out.println(request.getRawQueryString());
-		System.out.println(request.getOptions());
 
-		System.out.println("================");
-		System.out.println("MODULE1 TEST OUTPUT END");
-		System.out.println("================");
+		MyResponse resp = new MyResponse();
 
-		return new MyResponse();
+		resp.setStatus();
+		resp.setContentType();
+
+		return resp;
 	}
 
 	@Override

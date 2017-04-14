@@ -1,6 +1,9 @@
 package net.protium.core.http
 
+import groovy.json.JsonException
+
 import net.protium.api.events.Response
+import net.protium.api.exceptions.InternalException
 import net.protium.api.exceptions.NotFoundException
 import net.protium.core.modulemanagement.Manager
 import net.protium.core.utils.Constant
@@ -11,6 +14,7 @@ import net.protium.core.utils.Pair
 import java.util.logging.FileHandler
 import java.util.logging.Level
 import java.util.logging.Logger
+import java.util.regex.Matcher
 
 /**
  * From: protium
@@ -18,12 +22,12 @@ import java.util.logging.Logger
  * At: 14.04.2017
  */
 @SuppressWarnings("GroovyUnusedDeclaration")
-class Router {
-    private Manager manager
-    private HashMap<String, ArrayList> routes
+class Router extends AbstractRouter {
+    private Map routes
+    private Logger logger
 
     Router(Manager manager) {
-        Logger logger = Logger.getLogger(this.getClass().getName())
+        logger = Logger.getLogger(this.getClass().getName())
 
         try {
             logger.addHandler((new FileHandler(
@@ -43,34 +47,71 @@ class Router {
 
         for (String path : paths) {
 
-            JSONParser parser = new JSONParser((new File(path)))
+            JSONParser parser
+
+            try {
+                parser = new JSONParser((new File(path)))
+            } catch (JsonException e) {
+                logger.log(Level.SEVERE, "failed to read route file '$path'", e)
+                continue
+            }
+
             def router = parser.get()
 
-            router.each { item ->
-                String module = item.getKey()
+            if (!(router instanceof Map)) {
+                logger.severe("Invalid schema in route file '$path'")
+                continue
+            }
 
-                def routeList = []
+            try {
+                router.each { item ->
+                    String module = item.getKey()
 
-                item.getValue().each { pattern ->
-                    routeList.add(new Pair(pattern.getKey(), pattern.getValue()))
+                    def routeList = routes.get(module) ?: []
+
+
+                    if (!(item.getValue() instanceof Map)) {
+                        throw new InternalException("wrongschema")
+                    }
+
+                    item.getValue().each { pattern ->
+
+                        if ((!(pattern.getValue() instanceof Map)) ||
+                                (!(pattern.getValue().get("args") instanceof List)) ||
+                                (!(pattern.getValue().get("action") instanceof String))
+                        ) {
+                            throw new InternalException("wrongschema")
+                        }
+
+                        routeList.add(new Pair(pattern.getKey(), pattern.getValue()))
+                    }
+
+                    routes.put(module, routeList)
                 }
-
-                routes.put(module, routeList)
+            } catch (InternalException ignored) {
+                logger.severe("Invalid schema in route file '$path'")
             }
         }
     }
 
     Response perform(HTTPRequest target) throws NotFoundException {
-
         for (def item : routes) {
-            def module = item.getKey()
+            String module = item.getKey()
 
             for (def pattern : item.getValue()) {
 
-                def matcher = target.getURL() =~ pattern.getLeft()
+                String action
+                ArrayList args
 
-                String action = pattern.getRight().get("action")
-                ArrayList args = pattern.getRight().get("args") as ArrayList
+                Matcher matcher = Functions.getMatcher(pattern.getLeft(), target.getURL())
+
+                try {
+                    action = (pattern.getRight()).get("action")
+                    args = (pattern.getRight()).get("args") as ArrayList
+                } catch (MissingMethodException e) {
+                    logger.log(Level.SEVERE, "Invalid schema in some of route files!", e)
+                    continue
+                }
 
                 if (matcher.matches()) {
 
@@ -79,13 +120,13 @@ class Router {
                     Integer count = Functions.min(matcher.groupCount(), pattern.getRight().size() as Integer)
 
                     for (int i = 0; i < count; i++) {
-                        options.put(args[i], matcher.group(i + 1))
+                        options.put((args as ArrayList)[i], matcher.group(i + 1))
                     }
 
                     target.setOptions(options)
                     target.setAction(action)
 
-                    return manager.getModule(module).onRequest(target)
+                    return _perform(module, target)
                 }
             }
         }
