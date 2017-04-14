@@ -25,11 +25,11 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Router {
+public class Router_OLD {
 	private Manager manager;
 	private Map < String, List < Pair < String, String > > > routes;
 
-	public Router(Manager manager) {
+	public Router_OLD(Manager manager) {
 		Logger logger = Logger.getLogger(this.getClass().getName());
 		try {
 			logger.addHandler((new FileHandler(
@@ -62,7 +62,7 @@ public class Router {
 		}
 	}
 
-	public Response redirect(HTTPRequest data) throws NotFoundException {
+	public Response perform(HTTPRequest data) throws NotFoundException {
 		String url = data.getURL();
 		for (Map.Entry < String, List < Pair < String, String > > > entry : routes.entrySet()) {
 			for (Pair < String, String > pattern : entry.getValue()) {

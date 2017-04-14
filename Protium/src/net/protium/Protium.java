@@ -24,34 +24,13 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class CustomSessionHandler extends AbstractHandler {
-	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/plain");
-
-		try {
-			HttpSession session = request.getSession();
-			if (session.isNew()) {
-				out.printf("New Session: %s%n", session.getId());
-			} else {
-				out.printf("Old Session: %s%n", session.getId());
-			}
-		} catch (IllegalStateException ex) {
-			out.println("Exception!" + ex);
-			ex.printStackTrace(out);
-		}
-		out.close();
-	}
-}
 
 public class Protium extends AbstractHandler {
 	private static Router router;
@@ -70,12 +49,10 @@ public class Protium extends AbstractHandler {
 
 		requestData.setURL(target);
 
-		System.err.println(request.getSession().isNew());
-
 		Response responseData;
 
 		try {
-			responseData = router.redirect(requestData);
+			responseData = router.perform(requestData);
 		} catch (NotFoundException e) {
 			logger.log(Level.WARNING, "404 Not Found: target " + target);
 
@@ -107,7 +84,6 @@ public class Protium extends AbstractHandler {
 	}
 
 	private static void initialize( ) throws IOException {
-		/* Init */
 
 		/* Create necessary dirs */
 		String[] paths = { Constant.CONF_D, Constant.DATA_D, Constant.LOG_D, Constant.MOD_D, Constant.RES_D, Constant.ROUTES_D };

@@ -14,8 +14,8 @@ import net.protium.api.events.Request
  * At: 10.04.17
  */
 class HTTPRequest implements Request {
-    private String rawData, action, url, queryString
-    private Map headers
+    private String rawData, action, queryString, url
+    private Map headers, options
 
     HTTPRequest(String rawData, String queryString, Map headers) {
         this.rawData = rawData
@@ -24,10 +24,10 @@ class HTTPRequest implements Request {
     }
 
     @Override
-    HashMap getSpecialData() {
+    Map getSpecialData() {
         def arrData = rawData.split('&')
 
-        HashMap formData = new HashMap<>()
+        Map formData = new HashMap<>()
 
         arrData.each { item ->
             item = item.split('=')
@@ -38,14 +38,15 @@ class HTTPRequest implements Request {
     }
 
     @SuppressWarnings("GroovyUnusedDeclaration")
-    Object setHeaders(Map headers) {
-        this.headers = headers
+    void setHeaders(Map headers) {
+        this.headers = headers as HashMap
     }
 
     @Override
     String getRawData() { rawData }
 
-    String setRawData(String data) { this.rawData = rawData }
+    @Override
+    Map getOptions() { options }
 
     @Override
     String getURL() { url }
@@ -54,10 +55,10 @@ class HTTPRequest implements Request {
     String getRawQueryString() { queryString }
 
     @Override
-    HashMap getQuery() {
+    Map getQuery() {
         def arrData = queryString.split('&')
 
-        HashMap queryData = new HashMap<>()
+        Map queryData = new HashMap<>()
 
         arrData.each { item ->
             item = item.split('=')
@@ -67,12 +68,14 @@ class HTTPRequest implements Request {
         queryData
     }
 
-    String setURL(String url) { this.url = url }
+    void setOptions(Map options) { this.options = options }
 
     @Override
     Map getHeaders() { headers }
 
     void setAction(String action) { this.action = action }
+
+    void setURL(String url) { this.url = url }
 
     @Override
     String getAction() { action }

@@ -49,7 +49,7 @@ class HTTPRequestParser {
                 break
             rawInput.append(new String(buffer))
         }
-        new HTTPRequest(rawInput.toString(), request.queryString, getHeaders())
+        new HTTPRequest(rawInput.toString(), request.getQueryString(), getHeaders())
     }
 
 }

@@ -1,0 +1,8 @@
+{
+	"module1": {
+		"/module1/([0-9]{3,})": {
+			"action": "action1",
+			"args": [ "id" ]
+		}
+	}
+}

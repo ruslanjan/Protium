@@ -6,6 +6,7 @@
 
 package net.protium.api.events;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public interface Request {
@@ -18,6 +19,8 @@ public interface Request {
 	Object getHeaders( );
 
 	String getAction();
+
+	Map getOptions();
 
 	String getURL();
 

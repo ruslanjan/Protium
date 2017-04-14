@@ -76,6 +76,10 @@ final class Functions {
     }
 
     static boolean matchRegex(String regex, String needle) {
-        needle =~ regex
+        (needle =~ regex).matches()
+    }
+
+    static Integer min(Integer a, Integer b) {
+        (a < b ? a : b)
     }
 }
