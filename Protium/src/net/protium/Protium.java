@@ -17,20 +17,43 @@ import net.protium.core.utils.Functions;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.session.DefaultSessionIdManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+class CustomSessionHandler extends AbstractHandler {
+	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/plain");
+
+		try {
+			HttpSession session = request.getSession();
+			if (session.isNew()) {
+				out.printf("New Session: %s%n", session.getId());
+			} else {
+				out.printf("Old Session: %s%n", session.getId());
+			}
+		} catch (IllegalStateException ex) {
+			out.println("Exception!" + ex);
+			ex.printStackTrace(out);
+		}
+		out.close();
+	}
+}
+
 public class Protium extends AbstractHandler {
-	@SuppressWarnings("FieldCanBeLocal")
-	private static Manager manager;
 	private static Router router;
 	private static Logger logger = Logger.getLogger(Protium.class.getName());
 
@@ -46,6 +69,8 @@ public class Protium extends AbstractHandler {
 		HTTPRequest requestData = parser.getHTTPRequest();
 
 		requestData.setURL(target);
+
+		System.err.println(request.getSession().isNew());
 
 		Response responseData;
 
@@ -110,9 +135,20 @@ public class Protium extends AbstractHandler {
 		}
 
 		Server server = new Server(8081);
-		server.setHandler(new Protium());
 
-		manager = new Manager();
+		DefaultSessionIdManager sessionIdManager = new DefaultSessionIdManager(server);
+		SessionHandler sessionHandler = new SessionHandler();
+
+		sessionHandler.setHandler(new Protium());
+
+
+		ContextHandler context = new ContextHandler("/");
+		context.setHandler(sessionHandler);
+
+		server.setHandler(context);
+		server.setSessionIdManager(sessionIdManager);
+
+		Manager manager = new Manager();
 		router = new Router(manager);
 
 		try {
