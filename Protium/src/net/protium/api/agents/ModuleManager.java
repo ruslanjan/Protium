@@ -8,7 +8,9 @@ package net.protium.api.agents;
 
 import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+import net.protium.core.utils.Pair;
+
+import java.util.Collection;
 
 public interface ModuleManager {
     Module getModule(String name) throws NotFoundException;
@@ -21,4 +23,5 @@ public interface ModuleManager {
 
     void disableModule(String name) throws NotFoundException;
 
+    Collection<Pair<String, Boolean>> getModulesAsString();
 }

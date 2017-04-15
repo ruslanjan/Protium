@@ -4,7 +4,7 @@ import groovy.json.JsonException
 import net.protium.api.events.Response
 import net.protium.api.exceptions.InternalException
 import net.protium.api.exceptions.NotFoundException
-import net.protium.core.modulemanagement.Manager
+import net.protium.core.modules.management.Manager
 import net.protium.core.utils.Constant
 import net.protium.core.utils.Functions
 import net.protium.core.utils.JSONParser

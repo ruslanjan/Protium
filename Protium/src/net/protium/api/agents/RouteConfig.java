@@ -12,10 +12,11 @@ import net.protium.core.utils.Functions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class RouteConfig extends Config {
 
-	public RouteConfig(String configName) {
+	public RouteConfig(String configName) throws IOException, FileReadException {
 		super(configName);
 	}
 

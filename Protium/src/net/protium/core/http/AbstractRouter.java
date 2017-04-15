@@ -9,7 +9,7 @@ package net.protium.core.http;
 import net.protium.api.events.Request;
 import net.protium.api.events.Response;
 import net.protium.api.exceptions.NotFoundException;
-import net.protium.core.modulemanagement.Manager;
+import net.protium.core.modules.management.Manager;
 
 abstract public class AbstractRouter {
 

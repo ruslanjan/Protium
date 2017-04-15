@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package net.protium.core.modulemanagement;
+package net.protium.core.modules.management;
 
 import net.protium.core.utils.Constant;
 import net.protium.core.utils.Functions;
@@ -38,7 +38,12 @@ class ModuleClassLoader extends ClassLoader {
     @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         try {
-            return parent.loadClass(name);
+            Class c = findLoadedClass(name);
+            if (c == null) {
+                return parent.loadClass(name);
+            } else {
+                return c;
+            }
         } catch (ClassNotFoundException ignored) {
             String path = name.replace('.', '/') + ".class";
             for (String module:modules) {

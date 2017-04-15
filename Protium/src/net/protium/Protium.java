@@ -10,11 +10,13 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.protium.api.agents.Config;
 import net.protium.api.events.Response;
+import net.protium.api.exceptions.FileReadException;
 import net.protium.api.exceptions.NotFoundException;
+import net.protium.core.gui.MainApp;
 import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.http.Router;
-import net.protium.core.modulemanagement.Manager;
+import net.protium.core.modules.management.Manager;
 import net.protium.core.utils.Constant;
 import net.protium.core.utils.Functions;
 import org.eclipse.jetty.server.Request;
@@ -51,8 +53,8 @@ public class Protium extends AbstractHandler {
 
 	private static Config conf;
 
-	private static Manager manager;
-	private static Router router;
+	public static Manager manager;
+	public static Router router;
 
 	private static void initialize( ) {
 
@@ -82,7 +84,7 @@ public class Protium extends AbstractHandler {
 		/* Read configs */
 		try {
 			conf = new Config("server");
-		} catch (IOException e) {
+		} catch (IOException | FileReadException e) {
 			logger.log(Level.OFF, "Failed to read 'server' config.", e);
 			System.exit(-3);
 		}
@@ -206,7 +208,13 @@ public class Protium extends AbstractHandler {
 		_main();
 
 		modmgrLastReload = routerLastReload = System.currentTimeMillis();
+		runGUI();
 	}
+
+	private static void runGUI() {
+		javafx.application.Application.launch(MainApp.class);
+	}
+
 
 	private static String getErrorPage(Integer code, String target) {
 		String errorPage;

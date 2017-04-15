@@ -4,20 +4,24 @@
  * Proprietary and confidential
  */
 
-package net.protium.core.modulemanagement;
+package net.protium.core.modules.management;
 
 
 import net.protium.api.agents.CoreAgent;
 import net.protium.api.agents.ModuleManager;
 import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
+import net.protium.core.gui.MainApp;
 import net.protium.core.utils.Constant;
 import net.protium.core.utils.Functions;
 import net.protium.core.utils.JSONParser;
+import net.protium.core.utils.Pair;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.FileHandler;
@@ -57,11 +61,20 @@ public class Manager implements ModuleManager {
                 logger.log(Level.SEVERE, "Failed to create URL to module.json file", e);
                 continue;
             }
-            JSONParser config = null;
+            JSONParser config;
             try {
                 config = new JSONParser(confUrl.openStream());
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "Failed to open module.json in jarfile: " + path, e);
+                continue;
+            }
+            if (!checkJSONSchema(config)) {
+                logger.severe("Invalid schema in module.json in jar: " + path);
+                continue;
+            }
+            if (modules.containsKey(config.get("name"))) {
+                logger.warning("Module duplicated: " + config.getString("name"));
+                continue;
             }
             String mainClassPath = (String) config.get("mainClass");
             Class c;
@@ -90,6 +103,7 @@ public class Manager implements ModuleManager {
         moduleClassLoader = new ModuleClassLoader(ClassLoader.getSystemClassLoader(),
                 Functions.listFiles(Constant.MOD_D, ".jar"));
         loadAll();
+        MainApp.controller.reloadModuleList();
     }
 
     @Override
@@ -101,6 +115,7 @@ public class Manager implements ModuleManager {
         if (getStatus(name)) {
             modules.get(name).onDisable();
             moduleStatus.put(name, false);
+            MainApp.controller.reloadModuleList();
             logger.info("Module '" + name + "' is disabled");
         } else {
             logger.warning("Module '" + name + "' is already disabled");
@@ -117,6 +132,7 @@ public class Manager implements ModuleManager {
             modules.get(name).onEnable();
             moduleStatus.put(name, true);
             logger.info("Module '" + name + "' is enabled");
+            MainApp.controller.reloadModuleList();
         } else {
             logger.warning("Module '" + name + "' is already enabled");
         }
@@ -134,5 +150,29 @@ public class Manager implements ModuleManager {
             throw new NotFoundException();
         }
         return modules.get(name);
+    }
+
+    @Override
+    public Collection<Pair<String, Boolean>> getModulesAsString() {
+        Collection<Pair<String, Boolean>> collection = new ArrayList<>();
+        for (Map.Entry<String, Module> entry: modules.entrySet()) {
+            collection.add(new Pair<String, Boolean>(entry.getKey(), moduleStatus.get(entry.getKey())));
+        }
+        return collection;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        for (Map.Entry<String, Module> entry: modules.entrySet()) {
+            entry.getValue().onDisable();
+        }
+        super.finalize();
+    }
+
+    private boolean checkJSONSchema(JSONParser config) {
+        if (!config.checkPath("name") || !config.checkPath("mainClass")) {
+            return false;
+        }
+        return true;
     }
 }
