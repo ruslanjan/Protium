@@ -13,7 +13,7 @@ import net.protium.core.utils.Functions
 
 class Config extends AbstractJSONParser {
 
-    Config(String configName) {
+    Config(String configName) throws IOException {
         init(configName)
     }
 

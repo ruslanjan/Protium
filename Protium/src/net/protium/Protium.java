@@ -6,6 +6,8 @@
 
 package net.protium;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import net.protium.api.agents.Config;
 import net.protium.api.events.Response;
 import net.protium.api.exceptions.NotFoundException;
@@ -26,6 +28,7 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -51,24 +54,38 @@ public class Protium extends AbstractHandler {
 	private static Manager manager;
 	private static Router router;
 
-	private static void initialize( ) throws IOException {
+	private static void initialize( ) {
 
 		/* Create necessary dirs */
 		String[] paths = { Constant.CONF_D, Constant.DATA_D, Constant.LOG_D, Constant.MOD_D, Constant.RES_D, Constant.ROUTES_D };
 
 		for (String path : paths)
 			if (!Files.exists(Paths.get(path))) {
-				Files.createDirectory(Paths.get(path));
+				try {
+					Files.createDirectory(Paths.get(path));
+				} catch (IOException e) {
+					logger.log(Level.SEVERE, "Failed to create working folder '" + path + "'", e);
+					System.exit(-4);
+				}
 			}
 
 		/* Initialize logger */
-		logger.addHandler(
-			(new FileHandler(
-				Functions.createFile(Constant.LOG_D, Protium.class.getName(), Constant.LOG_EXT)
-			)));
+		try {
+			logger.addHandler(
+				(new FileHandler(
+					Functions.createFile(Constant.LOG_D, Protium.class.getName(), Constant.LOG_EXT)
+				)));
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, "Failed to initalize logger.", e);
+		}
 
 		/* Read configs */
-		conf = new Config("server");
+		try {
+			conf = new Config("server");
+		} catch (IOException e) {
+			logger.log(Level.OFF, "Failed to read 'server' config.", e);
+			System.exit(-3);
+		}
 
 		String profile = conf.checkPath("profile") ? conf.getString("profile") : "default";
 
@@ -93,7 +110,7 @@ public class Protium extends AbstractHandler {
 		) : MODMGR_RELOAD_TIMEOUT;
 	}
 
-	private static void _main(String[] args) {
+	private static void _main( ) {
 
 		Server server = new Server();
 
@@ -150,15 +167,43 @@ public class Protium extends AbstractHandler {
 	}
 
 	public static void main(String[] args) {
-		try {
-			initialize();
-		} catch (IOException e) {
-			System.err.println("Protium failed to initialize!\nHalted.");
-			e.printStackTrace();
-			System.exit(-1);
+
+		OptionParser parser = new OptionParser();
+
+		parser
+			.accepts("home-dir", "Specifies a directory to store all required files.")
+			.withRequiredArg();
+
+		parser
+			.accepts("d", "Shorthand for --home-dir option. If both are specified, --home-dir is preferred. ")
+			.withRequiredArg();
+
+		parser
+			.accepts("?", "Shorthand for --help option.");
+
+		parser
+			.accepts("help", "Show this help.");
+
+		OptionSet options = parser.parse(args);
+
+		if (options.has("?") || options.has("help")) {
+			try {
+				parser.printHelpOn(System.err);
+			} catch (IOException ignored) {
+			}
+
+			System.exit(0);
 		}
 
-		_main(args);
+		if (options.has("home-dir")) {
+			changeWorkingDir((String) options.valueOf("home-dir"));
+		} else if (options.has("h")) {
+			changeWorkingDir((String) options.valueOf("h"));
+		}
+
+		initialize();
+
+		_main();
 
 		modmgrLastReload = routerLastReload = System.currentTimeMillis();
 	}
@@ -199,6 +244,25 @@ public class Protium extends AbstractHandler {
 			logger.info("Reloading ModuleManager");
 			manager.reloadModules();
 		}
+
+	}
+
+	private static void changeWorkingDir(String dir) {
+		File file = new File(dir);
+		Constant.HOME_D = file.getAbsolutePath();
+
+		Constant.RES_D = Functions.implode(
+			new String[]{ Constant.HOME_D, Constant.RES_D }, File.separator);
+		Constant.CONF_D = Functions.implode(
+			new String[]{ Constant.HOME_D, Constant.CONF_D }, File.separator);
+		Constant.ROUTES_D = Functions.implode(
+			new String[]{ Constant.HOME_D, Constant.ROUTES_D }, File.separator);
+		Constant.LOG_D = Functions.implode(
+			new String[]{ Constant.HOME_D, Constant.LOG_D }, File.separator);
+		Constant.DATA_D = Functions.implode(
+			new String[]{ Constant.HOME_D, Constant.DATA_D }, File.separator);
+		Constant.MOD_D = Functions.implode(
+			new String[]{ Constant.HOME_D, Constant.MOD_D }, File.separator);
 
 	}
 

@@ -1,7 +1,6 @@
 package net.protium.core.http
 
 import groovy.json.JsonException
-
 import net.protium.api.events.Response
 import net.protium.api.exceptions.InternalException
 import net.protium.api.exceptions.NotFoundException
@@ -15,6 +14,7 @@ import java.util.logging.FileHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.regex.Matcher
+import java.util.regex.PatternSyntaxException
 
 /**
  * From: protium
@@ -83,13 +83,24 @@ class Router extends AbstractRouter {
                             throw new InternalException("wrongschema")
                         }
 
-                        routeList.add(new Pair(pattern.getKey(), pattern.getValue()))
-                    }
+                        boolean isValid = true
 
+                        try {
+                            "" =~ pattern.getKey()
+                        } catch (PatternSyntaxException ignored) {
+                            logger.log(Level.SEVERE, "Couldn't parse regex '%${pattern.getKey()}%' in file '$path'")
+                            isValid = false
+                        }
+
+                        if (isValid) {
+                            routeList.add(new Pair(pattern.getKey(), pattern.getValue()))
+                        }
+                    }
                     routes.put(module, routeList)
                 }
-            } catch (InternalException ignored) {
-                logger.severe("Invalid schema in route file '$path'")
+            } catch (InternalException e) {
+                if (e.getMessage() == "wrongschema")
+                    logger.severe("Invalid schema in route file '$path'")
             }
         }
     }
