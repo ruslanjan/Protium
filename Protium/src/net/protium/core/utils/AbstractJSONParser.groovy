@@ -9,6 +9,7 @@ package net.protium.core.utils
 import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import net.protium.api.agents.Functions
 import net.protium.api.exceptions.ArgumentException
 
 class AbstractJSONParser {

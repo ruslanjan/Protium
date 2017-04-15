@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: net.protium.TestJava
+Main-Class: net.protium.Protium
 

@@ -4,12 +4,13 @@
  * Proprietary and confidential
  */
 
-package net.protium.core.database
+package net.protium.modules.pauth.database
 
 import groovy.sql.Sql
 import net.protium.api.agents.Config
 import net.protium.api.exceptions.ArgumentException
 import net.protium.api.exceptions.ConfigException
+import net.protium.modules.pauth.util.C
 
 /**
  * From: protium
@@ -18,17 +19,19 @@ import net.protium.api.exceptions.ConfigException
  */
 class SqlWrapper {
 
+
+
     private Sql sql
     private Config conf
     private def dbc
 
     SqlWrapper() {
-        conf = new Config("database")
+        conf = new Config(C.DB_CONF_NAME)
         connect()
     }
 
     SqlWrapper(String dbcName) {
-        conf = new Config("database")
+        conf = new Config(C.DB_CONF_NAME)
         connect(dbcName)
     }
 
