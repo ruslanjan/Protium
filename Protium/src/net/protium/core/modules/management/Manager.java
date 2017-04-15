@@ -13,7 +13,7 @@ import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
 import net.protium.core.gui.MainApp;
 import net.protium.core.utils.Constant;
-import net.protium.core.utils.Functions;
+import net.protium.api.agents.Functions;
 import net.protium.core.utils.JSONParser;
 import net.protium.core.utils.Pair;
 
