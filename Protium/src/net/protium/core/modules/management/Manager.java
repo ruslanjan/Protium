@@ -32,6 +32,7 @@ public class Manager implements ModuleManager {
 
     private Map<String, Module> modules;
     private Map<String, Boolean> moduleStatus;
+    private Map<String, String> status;
     private ModuleClassLoader moduleClassLoader;
     private static Logger logger = Logger.getLogger(Manager.class.getName());
 
@@ -47,18 +48,24 @@ public class Manager implements ModuleManager {
         moduleStatus = new HashMap<>();
         moduleClassLoader = new ModuleClassLoader(ClassLoader.getSystemClassLoader(),
                 Functions.listFiles(Constant.MOD_D, ".jar"));
+        status = new HashMap<>();
         loadAll();
     }
 
     private void loadAll() {
+        status.clear();
+        modules.clear();
+        moduleStatus.clear();
         String[] modulesArr = Functions.listFiles(
                 Constant.MOD_D, ".jar");
         for (String path : modulesArr) {
+            String statusName = path;
             URL confUrl;
             try {
                 confUrl = new URL("jar:file:" + path + "!/module.json");
             } catch (MalformedURLException e) {
                 logger.log(Level.SEVERE, "Failed to create URL to module.json file", e);
+                status.put(statusName, "ERR");
                 continue;
             }
             JSONParser config;
@@ -66,22 +73,27 @@ public class Manager implements ModuleManager {
                 config = new JSONParser(confUrl.openStream());
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "Failed to open module.json in jarfile: " + path, e);
+                status.put(statusName, "ERR");
                 continue;
             }
             if (!checkJSONSchema(config)) {
                 logger.severe("Invalid schema in module.json in jar: " + path);
+                status.put(statusName, "ERR");
                 continue;
             }
             if (modules.containsKey(config.get("name"))) {
                 logger.warning("Module duplicated: " + config.getString("name"));
+                status.put(statusName, "WAR");
                 continue;
             }
+            statusName = config.getString("name");
             String mainClassPath = (String) config.get("mainClass");
             Class c;
             try {
                 c = moduleClassLoader.loadClass(mainClassPath);
             } catch (ClassNotFoundException e) {
                 logger.log(Level.SEVERE, "Load Module FAILED: main Class not found", e);
+                status.put(statusName, "ERR");
                 continue;
             }
             Module newModule;
@@ -89,12 +101,14 @@ public class Manager implements ModuleManager {
                 newModule = ((Module) c.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
                 logger.log(Level.SEVERE, "FAILED: Can not create an instance of " + c.getName(), e);
+                status.put(statusName, "ERR");
                 continue;
             }
             newModule.onEnable();
             String moduleName = (String) config.get("name");
             modules.put(moduleName, newModule);
             moduleStatus.put(moduleName, true);
+            status.put(statusName, "ON");
         }
     }
 
@@ -116,6 +130,7 @@ public class Manager implements ModuleManager {
             modules.get(name).onDisable();
             moduleStatus.put(name, false);
             MainApp.controller.reloadModuleList();
+            status.put(name, "OFF");
             logger.info("Module '" + name + "' is disabled");
         } else {
             logger.warning("Module '" + name + "' is already disabled");
@@ -132,6 +147,7 @@ public class Manager implements ModuleManager {
             modules.get(name).onEnable();
             moduleStatus.put(name, true);
             logger.info("Module '" + name + "' is enabled");
+            status.put(name, "ON");
             MainApp.controller.reloadModuleList();
         } else {
             logger.warning("Module '" + name + "' is already enabled");
@@ -144,6 +160,11 @@ public class Manager implements ModuleManager {
     }
 
     @Override
+    public String getExtendedStatus(String name) {
+        return status.get(name);
+    }
+
+    @Override
     public Module getModule(String name) throws NotFoundException {
         if (!modules.containsKey(name)) {
             logger.log(Level.SEVERE, "no module with name: " + name);
@@ -153,10 +174,10 @@ public class Manager implements ModuleManager {
     }
 
     @Override
-    public Collection<Pair<String, Boolean>> getModulesAsString() {
-        Collection<Pair<String, Boolean>> collection = new ArrayList<>();
-        for (Map.Entry<String, Module> entry: modules.entrySet()) {
-            collection.add(new Pair<String, Boolean>(entry.getKey(), moduleStatus.get(entry.getKey())));
+    public Collection<Pair<String, String>> getModulesAsString() {
+        Collection<Pair<String, String>> collection = new ArrayList<>();
+        for (Map.Entry<String, String> entry: status.entrySet()) {
+            collection.add(new Pair<>(entry.getKey(), entry.getValue()));
         }
         return collection;
     }

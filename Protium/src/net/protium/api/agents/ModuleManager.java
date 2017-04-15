@@ -13,6 +13,8 @@ import net.protium.core.utils.Pair;
 import java.util.Collection;
 
 public interface ModuleManager {
+    String getExtendedStatus(String name);
+
     Module getModule(String name) throws NotFoundException;
 
     void reloadModules();
@@ -23,5 +25,5 @@ public interface ModuleManager {
 
     void disableModule(String name) throws NotFoundException;
 
-    Collection<Pair<String, Boolean>> getModulesAsString();
+    Collection<Pair<String, String>> getModulesAsString();
 }

@@ -43,9 +43,9 @@ public final class MenuController {
     }
 
     public void reloadModuleList() {
-        Collection<Pair<String, Boolean>> collection = Protium.manager.getModulesAsString();
+        Collection<Pair<String, String>> collection = Protium.manager.getModulesAsString();
         list = FXCollections.observableArrayList();
-        for (Pair<String, Boolean> pr:collection) {
+        for (Pair<String, String> pr:collection) {
             list.add(new ModuleView(pr.getLeft(), pr.getRight()));
         }
         moduleTableView.setItems(list);

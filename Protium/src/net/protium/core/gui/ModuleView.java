@@ -13,13 +13,9 @@ class ModuleView {
     private final StringProperty name = new SimpleStringProperty();
     private final StringProperty status = new SimpleStringProperty();
 
-    ModuleView(String name, Boolean status) {
+    ModuleView(String name, String status) {
         this.name.setValue(name);
-        if (status) {
-            this.status.setValue("ON");
-        } else {
-            this.status.setValue("OFF");
-        }
+        this.status.setValue(status);
     }
 
     public StringProperty statusProperty() {

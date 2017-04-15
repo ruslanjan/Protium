@@ -110,6 +110,9 @@ public class Protium extends AbstractHandler {
 		) ? conf.getInteger(
 			Config.toPath(new String[]{ profilePath, "moduleManager.reloadInterval" })
 		) : MODMGR_RELOAD_TIMEOUT;
+
+		manager = new Manager();
+		router = new Router(manager);
 	}
 
 	private static void _main( ) {
@@ -156,12 +159,9 @@ public class Protium extends AbstractHandler {
 		server.setHandler(context);
 		server.setSessionIdManager(sessionIdManager);
 
-		manager = new Manager();
-		router = new Router(manager);
-
 		try {
 			server.start();
-			server.join();
+			//server.join();
 		} catch (Exception e) {
 			logger.log(Level.OFF, "Jetty failed to start! Halted.", e);
 			System.exit(-2);
@@ -206,9 +206,11 @@ public class Protium extends AbstractHandler {
 		initialize();
 
 		_main();
+		while (true) {
+			runGUI();
+		}
 
-		modmgrLastReload = routerLastReload = System.currentTimeMillis();
-		runGUI();
+		//modmgrLastReload = routerLastReload = System.currentTimeMillis();
 	}
 
 	private static void runGUI() {
