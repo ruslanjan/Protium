@@ -206,9 +206,7 @@ public class Protium extends AbstractHandler {
 		initialize();
 
 		_main();
-		while (true) {
-			runGUI();
-		}
+		runGUI();
 
 		//modmgrLastReload = routerLastReload = System.currentTimeMillis();
 	}
