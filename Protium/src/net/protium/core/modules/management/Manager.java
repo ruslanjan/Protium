@@ -7,6 +7,7 @@
 package net.protium.core.modules.management;
 
 
+import com.sun.tracing.dtrace.ModuleName;
 import net.protium.api.agents.CoreAgent;
 import net.protium.api.agents.ModuleManager;
 import net.protium.api.exceptions.NotFoundException;
@@ -110,13 +111,17 @@ public class Manager implements ModuleManager {
                 status.put(statusName, "ERR");
                 continue;
             }
-            newModule.onEnable();
             String moduleName = (String) config.get("name");
+            try {
+                newModule.onEnable();
+            } catch (Exception e) {
+                logger.severe("Unhandled exception in module: " + moduleName);
+            }
             modules.put(moduleName, newModule);
             moduleStatus.put(moduleName, true);
             status.put(statusName, "ON");
             try {
-                modulesURLMap.put(moduleName, new URL(path));
+                modulesURLMap.put(moduleName, new URL("jar:file:" + path + "!/"));
             } catch (MalformedURLException e) {
                 logger.warning("Failed to open url to jar file module: " + path);
             }
@@ -138,7 +143,11 @@ public class Manager implements ModuleManager {
             throw new NotFoundException();
         }
         if (getStatus(name)) {
-            modules.get(name).onDisable();
+            try {
+                modules.get(name).onDisable();
+            } catch (Exception e) {
+                logger.severe("Unhandled exception in module: " + name);
+            }
             moduleStatus.put(name, false);
             MainApp.controller.reloadModuleList();
             status.put(name, "OFF");
@@ -155,7 +164,11 @@ public class Manager implements ModuleManager {
             throw new NotFoundException();
         }
         if (!getStatus(name)) {
-            modules.get(name).onEnable();
+            try {
+                modules.get(name).onEnable();
+            } catch (Exception e) {
+                logger.severe("Unhandled exception in module: " + name);
+            }
             moduleStatus.put(name, true);
             logger.info("Module '" + name + "' is enabled");
             status.put(name, "ON");
