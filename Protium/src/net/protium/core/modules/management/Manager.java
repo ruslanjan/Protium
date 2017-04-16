@@ -190,6 +190,7 @@ public class Manager implements ModuleManager {
             logger.log(Level.SEVERE, "no moduleURL with name: " + name);
             throw new NotFoundException();
         }
+        //
         return modulesURLMap.get(name);
     }
 
