@@ -12,6 +12,8 @@ import net.protium.api.agents.Config;
 import net.protium.api.events.Response;
 import net.protium.api.exceptions.FileReadException;
 import net.protium.api.exceptions.NotFoundException;
+import net.protium.core.cli.Console;
+import net.protium.core.gui.GUIThread;
 import net.protium.core.gui.MainApp;
 import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
@@ -55,6 +57,7 @@ public class Protium extends AbstractHandler {
 
 	public static Manager manager;
 	public static Router router;
+	public static Console console;
 
 	private static void initialize( ) {
 
@@ -209,12 +212,19 @@ public class Protium extends AbstractHandler {
 
 		runGUI();
 
+		console = new Console();
+		try {
+			console.start();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
 
 		//modmgrLastReload = routerLastReload = System.currentTimeMillis();
 	}
 
 	private static void runGUI() {
-		javafx.application.Application.launch(MainApp.class);
+		Thread gui = new Thread(new GUIThread());
+		gui.start();
 	}
 
 

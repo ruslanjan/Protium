@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Console {
@@ -22,8 +23,12 @@ public class Console {
     private Map<String, Method> methodMap;
     private Logger logger = Logger.getLogger(getClass().getName());
 
-    Console() throws IOException {
-        logger.addHandler(new FileHandler(Constant.LOG_D + getClass() + Constant.LOG_EXT));
+    public Console() {
+        try {
+            logger.addHandler(new FileHandler(Constant.LOG_D + getClass() + Constant.LOG_EXT));
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to create FileHandler", e);
+        }
         objectMap = new HashMap<>();
         methodMap = new HashMap<>();
     }
