@@ -22,7 +22,7 @@ public class RouteConfig extends Config {
 
 	@Override
 	protected void init(String configName) throws FileReadException, FileNotFoundException {
-		String filePath = Functions.pathToFile(Constant.ROUTES_D, configName, ".json");
+		String filePath = Functions.pathToFile(Constant.ROUTES_DIR, configName, ".json");
 		file = new File(filePath);
 
 

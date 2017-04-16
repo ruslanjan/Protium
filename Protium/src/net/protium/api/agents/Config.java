@@ -7,6 +7,7 @@ import net.protium.core.utils.Constant;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 public class Config extends AbstractJSONParser {
 	public Config(String configName) throws IOException, FileReadException {
@@ -14,7 +15,7 @@ public class Config extends AbstractJSONParser {
 	}
 
 	protected void init(String configName) throws FileReadException, FileNotFoundException {
-		String filePath = Functions.pathToFile(Constant.CONF_D, configName, Constant.CONF_EXT);
+		String filePath = Functions.pathToFile(Constant.CONF_DIR, configName, Constant.CONF_EXT);
 
 		file = new File(filePath);
 
@@ -24,13 +25,23 @@ public class Config extends AbstractJSONParser {
 	}
 
 	public static boolean createConfig(String configName) throws IOException {
-		String filePath = Functions.createFile(Constant.CONF_D, configName, Constant.CONF_EXT);
+		String filePath = Functions.createFile(Constant.CONF_DIR, configName, Constant.CONF_EXT);
 
 		File file = new File(filePath);
 
-		return file.exists() || ((file.getParentFile().mkdirs() || file.getParentFile().exists()) && file.createNewFile());
+		boolean success = file.exists() || ((file.getParentFile().mkdirs() || file.getParentFile().exists()) && file.createNewFile());
 
-//		return false;
+		URL url = new URL(file.getAbsolutePath());
+
+		url.openConnection().getOutputStream().write("null".getBytes());
+
+		return success;
+	}
+
+	public static boolean configExists(String configName) throws IOException {
+		String filePath = Functions.createFile(Constant.CONF_DIR, configName, Constant.CONF_EXT);
+
+		return (new File(filePath)).exists();
 	}
 
 }

@@ -14,20 +14,20 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
-    public static MenuController controller;
-    public static MainApp self;
+	public static MenuController controller;
+	public static MainApp self;
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("menu.fxml"));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
+	@Override
+	public void start(Stage stage) throws Exception {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("menu.fxml"));
+		Parent root = loader.load();
+		Scene scene = new Scene(root);
 
-        stage.setTitle("Parent");
-        stage.setScene(scene);
-        stage.show();
-        controller = (MenuController)loader.getController();
-        controller.setMainApp(this);
-        self = this;
-    }
+		stage.setTitle("Protium Server ");
+		stage.setScene(scene);
+		stage.show();
+		controller = (MenuController) loader.getController();
+		controller.setMainApp(this);
+		self = this;
+	}
 }

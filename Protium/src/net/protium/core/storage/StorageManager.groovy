@@ -22,7 +22,7 @@ final class StorageManager {
     static Resource getResource(String name) { new Resource(name) }
 
     static void createResource(String name, byte[] data) {
-        String path = (Constant.RES_D + name)
+        String path = (Constant.RES_DIR + name)
         if (!Files.exists(Paths.get(path))) {
             Files.createFile(Paths.get(path))
         }
@@ -31,7 +31,7 @@ final class StorageManager {
     }
 
     static void createResource(String name, String data) {
-        String path = (Constant.RES_D + name)
+        String path = (Constant.RES_DIR + name)
         if (!Files.exists(Paths.get(path))) {
             Files.createFile(Paths.get(path))
         }
@@ -41,7 +41,7 @@ final class StorageManager {
     }
 
     static void createResource(String name, File data) {
-        String path = (Constant.RES_D + name)
+        String path = (Constant.RES_DIR + name)
         if (!Files.exists(Paths.get(path))) {
             Files.createFile(Paths.get(path))
         }

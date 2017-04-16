@@ -1,4 +1,8 @@
 {
-	"name": "PAuth",
+	"id": "PAuth",
+	"name": "PAuth - Protium official auth system",
+	"version": "v0.0.2/test",
+	"author": "Protium Team - Ussoltsev",
+	"description": "PAuth\nDefault auth system from Protium developers.\nDeveloped by Ussoltsev for demonstrational needs.\nFeel free to use PAuth!",
 	"mainClass": "net.protium.modules.pauth.PAuth"
 }

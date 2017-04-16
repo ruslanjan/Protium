@@ -16,6 +16,7 @@ class C {
 
     public static String DB_CONF_NAME = "${MODULE_BASENAME}/database"
     public static String CRYPTO_CONF_NAME = "${MODULE_BASENAME}/crypto"
+    public static String FSI_NAME = "${MODULE_BASENAME}/fsi"
 
     public static Integer BCRYPT_ROUNDS = 9
     public static Integer MIN_PASSWORD_LENGTH = 8

@@ -12,14 +12,14 @@ class Constant {
 
     public static String VERSION = "v0.0.0-dev"
 
-    public static String HOME_D = "."
+    public static String HOME_DIR = "."
 
-    public static String CONF_D = "config"
-    public static String MOD_D = "modules"
-    public static String LOG_D = "logs"
-    public static String ROUTES_D = "routes"
-    public static String RES_D = "resources"
-    public static String DATA_D = "data"
+    public static String CONF_DIR = "config"
+    public static String MOD_DIR = "modules"
+    public static String LOG_DIR = "logs"
+    public static String ROUTES_DIR = "routes"
+    public static String RES_DIR = "resources"
+    public static String DATA_DIR = "data"
 
     public static String MOD_EXT = ".jar"
     public static String CONF_EXT = ".json"

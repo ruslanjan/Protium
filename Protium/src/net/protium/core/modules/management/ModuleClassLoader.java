@@ -27,7 +27,7 @@ class ModuleClassLoader extends ClassLoader {
     ModuleClassLoader(ClassLoader parent, String[] modules) {
         try {
             logger.addHandler((new FileHandler(
-                    Functions.createFile(Constant.LOG_D, this.getClass().getName(), Constant.LOG_EXT))));
+                    Functions.createFile(Constant.LOG_DIR, this.getClass().getName(), Constant.LOG_EXT))));
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to write logs", e);
         }
@@ -51,7 +51,7 @@ class ModuleClassLoader extends ClassLoader {
                 try {
                     url = new URL("jar:file:" + module + "!/" + path);
                 } catch (MalformedURLException e) {
-                    logger.log(Level.SEVERE, "Failed to open url: " + "jar:file:" + Constant.MOD_D + path, e);
+                    logger.log(Level.SEVERE, "Failed to open url: " + "jar:file:" + Constant.MOD_DIR + path, e);
                     continue;
                 }
                 try {

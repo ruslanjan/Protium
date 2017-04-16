@@ -31,7 +31,7 @@ class Router extends AbstractRouter {
 
         try {
             logger.addHandler((new FileHandler(
-                    Functions.createFile(Constant.LOG_D, this.getClass().getName(), Constant.LOG_EXT))))
+                    Functions.createFile(Constant.LOG_DIR, this.getClass().getName(), Constant.LOG_EXT))))
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to write logs", e)
         }
@@ -43,7 +43,7 @@ class Router extends AbstractRouter {
 
     def reload() {
         routes = new HashMap<>()
-        String[] paths = Functions.listFiles(Constant.ROUTES_D, Constant.CONF_EXT)
+        String[] paths = Functions.listFiles(Constant.ROUTES_DIR, Constant.CONF_EXT)
 
         for (String path : paths) {
 

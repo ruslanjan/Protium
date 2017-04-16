@@ -14,14 +14,12 @@ import net.protium.api.events.Response
  * At: 15.04.17
  */
 class PAResponse implements Response {
+
+    String response
+
     @Override
     String getContentType() {
         return "text/html; charset=utf-8"
-    }
-
-    @Override
-    String getResponse() {
-        return "PAuth.onRequest"
     }
 
     @Override

@@ -109,8 +109,13 @@ class AbstractJSONParser {
 
     def get() { data }
 
-    void set(String path, value) {
+    AbstractJSONParser set(String path, value) {
         data = setRecursive(data, path.split(PATH_SEPARATOR_REGEX), value)
+        this
+    }
+
+    AbstractJSONParser set(value) {
+        data = value
         this
     }
 
@@ -123,7 +128,7 @@ class AbstractJSONParser {
         }
     }
 
-    void commit(boolean prettyPrint = true) {
+    AbstractJSONParser commit(boolean prettyPrint = true) {
         if (file == null)
             return
         FileWriter writer = new FileWriter(file, false)
@@ -133,6 +138,8 @@ class AbstractJSONParser {
                         JsonOutput.toJson(data)
         )
         writer.close()
+
+        this
     }
 
 }

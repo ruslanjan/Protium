@@ -28,7 +28,7 @@ class Resource {
     }
 
     void reload(String name)  throws FileNotFoundException {
-        String path = (Constant.RES_D + name)
+        String path = (Constant.RES_DIR + name)
         file = new File(path)
         reload()
     }

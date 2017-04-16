@@ -14,7 +14,6 @@ import net.protium.api.exceptions.FileReadException;
 import net.protium.api.exceptions.NotFoundException;
 import net.protium.core.cli.Console;
 import net.protium.core.gui.GUIThread;
-import net.protium.core.gui.MainApp;
 import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.http.Router;
@@ -62,7 +61,7 @@ public class Protium extends AbstractHandler {
 	private static void initialize( ) {
 
 		/* Create necessary dirs */
-		String[] paths = { Constant.CONF_D, Constant.DATA_D, Constant.LOG_D, Constant.MOD_D, Constant.RES_D, Constant.ROUTES_D };
+		String[] paths = { Constant.CONF_DIR, Constant.DATA_DIR, Constant.LOG_DIR, Constant.MOD_DIR, Constant.RES_DIR, Constant.ROUTES_DIR };
 
 		for (String path : paths)
 			if (!Files.exists(Paths.get(path))) {
@@ -78,7 +77,7 @@ public class Protium extends AbstractHandler {
 		try {
 			logger.addHandler(
 				(new FileHandler(
-					Functions.createFile(Constant.LOG_D, Protium.class.getName(), Constant.LOG_EXT)
+					Functions.createFile(Constant.LOG_DIR, Protium.class.getName(), Constant.LOG_EXT)
 				)));
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to initalize logger.", e);
@@ -234,11 +233,11 @@ public class Protium extends AbstractHandler {
 			errorPage = new String(
 				Files.readAllBytes(
 					Paths.get(
-						Functions.pathToFile(Constant.DATA_D, "error-" + code.toString(), ".html")
+						Functions.pathToFile(Constant.DATA_DIR, "error-" + code.toString(), ".html")
 					)));
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "failed to load error page '" + Paths.get(
-				Functions.createFile(Constant.DATA_D, "error-" + code.toString(), ".html")
+				Functions.createFile(Constant.DATA_DIR, "error-" + code.toString(), ".html")
 			) + "'", e);
 			return String.valueOf(code);
 		}
@@ -269,20 +268,20 @@ public class Protium extends AbstractHandler {
 
 	private static void changeWorkingDir(String dir) {
 		File file = new File(dir);
-		Constant.HOME_D = file.getAbsolutePath();
+		Constant.HOME_DIR = file.getAbsolutePath();
 
-		Constant.RES_D = Functions.implode(
-			new String[]{ Constant.HOME_D, Constant.RES_D }, File.separator);
-		Constant.CONF_D = Functions.implode(
-			new String[]{ Constant.HOME_D, Constant.CONF_D }, File.separator);
-		Constant.ROUTES_D = Functions.implode(
-			new String[]{ Constant.HOME_D, Constant.ROUTES_D }, File.separator);
-		Constant.LOG_D = Functions.implode(
-			new String[]{ Constant.HOME_D, Constant.LOG_D }, File.separator);
-		Constant.DATA_D = Functions.implode(
-			new String[]{ Constant.HOME_D, Constant.DATA_D }, File.separator);
-		Constant.MOD_D = Functions.implode(
-			new String[]{ Constant.HOME_D, Constant.MOD_D }, File.separator);
+		Constant.RES_DIR = Functions.implode(
+			new String[]{ Constant.HOME_DIR, Constant.RES_DIR }, File.separator);
+		Constant.CONF_DIR = Functions.implode(
+			new String[]{ Constant.HOME_DIR, Constant.CONF_DIR }, File.separator);
+		Constant.ROUTES_DIR = Functions.implode(
+			new String[]{ Constant.HOME_DIR, Constant.ROUTES_DIR }, File.separator);
+		Constant.LOG_DIR = Functions.implode(
+			new String[]{ Constant.HOME_DIR, Constant.LOG_DIR }, File.separator);
+		Constant.DATA_DIR = Functions.implode(
+			new String[]{ Constant.HOME_DIR, Constant.DATA_DIR }, File.separator);
+		Constant.MOD_DIR = Functions.implode(
+			new String[]{ Constant.HOME_DIR, Constant.MOD_DIR }, File.separator);
 
 	}
 
@@ -306,7 +305,7 @@ public class Protium extends AbstractHandler {
 		try {
 			responseData = router.perform(requestData);
 		} catch (NotFoundException e) {
-			logger.log(Level.WARNING, "404 Not Found: target " + target);
+			logger.log(Level.WARNING, "404 Not Found: target " + target, e);
 
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			response.setContentType(Constant.HTML_CONTENT_TYPE);
