@@ -88,12 +88,12 @@ public class Manager implements ModuleManager {
                 status.put(statusName, "ERR");
                 continue;
             }
-            if (modules.containsKey(config.get("name"))) {
-                logger.warning("Module duplicated: " + config.getString("name"));
+            if (modules.containsKey(config.get("id"))) {
+                logger.warning("Module duplicated: " + config.getString("id"));
                 status.put(statusName, "WAR");
                 continue;
             }
-            statusName = config.getString("name");
+            statusName = config.getString("id");
             String mainClassPath = (String) config.get("mainClass");
             Class c;
             try {
