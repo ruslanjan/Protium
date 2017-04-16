@@ -55,8 +55,7 @@ public class Protium extends AbstractHandler {
 	private static Config conf;
 
 	public static Manager manager;
-	public static Router router;
-	public static Console console;
+	private static Router router;
 
 	private static void initialize( ) {
 
@@ -211,7 +210,8 @@ public class Protium extends AbstractHandler {
 
 		runGUI();
 
-		console = new Console();
+		Console console = new Console();
+
 		try {
 			console.start();
 		} catch (NoSuchMethodException e) {
@@ -222,8 +222,8 @@ public class Protium extends AbstractHandler {
 	}
 
 	private static void runGUI() {
-		Thread gui = new Thread(new GUIThread());
-		gui.start();
+		Thread guiThread = new Thread(new GUIThread());
+		guiThread.start();
 	}
 
 
@@ -235,6 +235,7 @@ public class Protium extends AbstractHandler {
 					Paths.get(
 						Functions.pathToFile(Constant.DATA_DIR, "error-" + code.toString(), ".html")
 					)));
+
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "failed to load error page '" + Paths.get(
 				Functions.createFile(Constant.DATA_DIR, "error-" + code.toString(), ".html")

@@ -9,14 +9,12 @@ package net.protium.modules.pauth
 import net.protium.api.agents.Config
 import net.protium.api.agents.CoreAgent
 import net.protium.api.events.Request
-import net.protium.api.exceptions.NotFoundException
 import net.protium.api.module.Module
 import net.protium.modules.pauth.database.SqlWrapper
 import net.protium.modules.pauth.request.PAResponse
 import net.protium.modules.pauth.util.C
 
 import java.util.logging.Logger
-
 /**
  * From: protium
  * Pkg: net.protium.modules.pauth
@@ -49,15 +47,11 @@ class PAuth extends Module {
     @Override
     PAResponse onRequest(Request request) {
         PAResponse par = new PAResponse()
-        URL url
+        URL url = CoreAgent.moduleManager.getModuleResourceURL(C.MODULE_BASENAME, "res/data.txt")
 
-        try {
-            url = CoreAgent.moduleManager.getModuleResourceURL(C.MODULE_BASENAME, "res/data.txt")
-        } catch (NotFoundException e) {
-            System.err << "================\n" << "================\n" << e.toString() << "================\n" << "================\n"
-        }
+        String file = url.getText()
 
-        par.response = "URL response: " + url.toString()
+        par.response = "URL response: " + file
 
         par
     }
