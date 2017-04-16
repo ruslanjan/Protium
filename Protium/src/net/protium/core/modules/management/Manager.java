@@ -195,6 +195,21 @@ public class Manager implements ModuleManager {
     }
 
     @Override
+    public URL getModuleResourceURL(String name, String path) throws NotFoundException {
+        if (!modulesURLMap.containsKey(name)) {
+            logger.log(Level.SEVERE, "no module URL with name: " + name);
+            throw new NotFoundException();
+        }
+        //
+        try {
+            return new URL(modulesURLMap.get(name).toString() + path);
+        } catch (MalformedURLException e) {
+            logger.severe("Failed to get URL of: " + modulesURLMap.get(name).toString() + path);
+        }
+        return null;
+    }
+
+    @Override
     public void setModuleExtendedStatus(String ModuleName, String status) throws NotFoundException {
         if (!this.status.containsKey(ModuleName)) {
             logger.log(Level.SEVERE, "no moduleStatus with name: " + ModuleName);

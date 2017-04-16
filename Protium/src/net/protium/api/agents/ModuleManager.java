@@ -28,6 +28,8 @@ public interface ModuleManager {
 
     URL getModuleURL(String name) throws NotFoundException;
 
+    URL getModuleResourceURL(String name, String path) throws NotFoundException;
+
     void setModuleExtendedStatus(String name, String status) throws NotFoundException;
 
     Collection<Pair<String, String>> getModulesAsString();
