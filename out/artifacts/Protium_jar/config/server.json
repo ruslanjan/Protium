@@ -1,0 +1,17 @@
+{
+	"profile": "default",
+	"profiles": {
+		"default": {
+			"http": {
+				"port": 8081,
+				"host": "localhost",
+				"idleTimeout": 30000
+			},
+			"router": {
+				"reloadInterval": 5000
+			},
+			"moduleManager": {
+			}
+		}
+	}
+}

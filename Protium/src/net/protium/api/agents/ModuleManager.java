@@ -10,6 +10,7 @@ import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
 import net.protium.core.utils.Pair;
 
+import java.net.URL;
 import java.util.Collection;
 
 public interface ModuleManager {
@@ -24,6 +25,10 @@ public interface ModuleManager {
     void enableModule(String name) throws NotFoundException;
 
     void disableModule(String name) throws NotFoundException;
+
+    URL getModuleURL(String name) throws NotFoundException;
+
+    void setModuleExtendedStatus(String name, String status) throws NotFoundException;
 
     Collection<Pair<String, String>> getModulesAsString();
 }

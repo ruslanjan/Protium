@@ -34,6 +34,7 @@ public class Manager implements ModuleManager {
     private Map<String, Boolean> moduleStatus;
     private Map<String, String> status;
     private ModuleClassLoader moduleClassLoader;
+    private Map<String, URL> modulesURLMap;
     private static Logger logger = Logger.getLogger(Manager.class.getName());
 
     public Manager() {
@@ -43,12 +44,16 @@ public class Manager implements ModuleManager {
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to write logs", e);
         }
+
         CoreAgent.setModuleManager(this);
+
         modules = new HashMap<>();
         moduleStatus = new HashMap<>();
         moduleClassLoader = new ModuleClassLoader(ClassLoader.getSystemClassLoader(),
                 Functions.listFiles(Constant.MOD_D, ".jar"));
         status = new HashMap<>();
+        modulesURLMap = new HashMap<>();
+
         loadAll();
     }
 
@@ -56,6 +61,7 @@ public class Manager implements ModuleManager {
         status.clear();
         modules.clear();
         moduleStatus.clear();
+        modulesURLMap.clear();
         String[] modulesArr = Functions.listFiles(
                 Constant.MOD_D, ".jar");
         for (String path : modulesArr) {
@@ -109,6 +115,11 @@ public class Manager implements ModuleManager {
             modules.put(moduleName, newModule);
             moduleStatus.put(moduleName, true);
             status.put(statusName, "ON");
+            try {
+                modulesURLMap.put(moduleName, new URL(path));
+            } catch (MalformedURLException e) {
+                logger.warning("Failed to open url to jar file module: " + path);
+            }
         }
     }
 
@@ -171,6 +182,24 @@ public class Manager implements ModuleManager {
             throw new NotFoundException();
         }
         return modules.get(name);
+    }
+
+    @Override
+    public URL getModuleURL(String name) throws NotFoundException {
+        if (!modulesURLMap.containsKey(name)) {
+            logger.log(Level.SEVERE, "no moduleURL with name: " + name);
+            throw new NotFoundException();
+        }
+        return modulesURLMap.get(name);
+    }
+
+    @Override
+    public void setModuleExtendedStatus(String ModuleName, String status) throws NotFoundException {
+        if (!this.status.containsKey(ModuleName)) {
+            logger.log(Level.SEVERE, "no moduleStatus with name: " + ModuleName);
+            throw new NotFoundException();
+        }
+        this.status.put(ModuleName, status);
     }
 
     @Override
