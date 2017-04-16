@@ -25,7 +25,7 @@ public class Console {
 
     public Console() {
         try {
-            logger.addHandler(new FileHandler(Constant.LOG_D + getClass() + Constant.LOG_EXT));
+            logger.addHandler(new FileHandler((Constant.LOG_D + "/" + getClass() + Constant.LOG_EXT)));
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to create FileHandler", e);
         }
@@ -47,7 +47,7 @@ public class Console {
         while (true) {
             if (sc.hasNextLine()) {
                 String str = sc.nextLine();
-                String[] strs = str.split(" ");
+                String[] strs = str.split("\\s");
                 // to delete
                 if (strs[0] == "stop") {
                     System.exit(0);
