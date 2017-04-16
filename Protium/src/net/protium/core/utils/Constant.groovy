@@ -14,7 +14,7 @@ class Constant {
 
     public static String HOME_D = "."
 
-    public static String CONF_DIRECTORY = "config"
+    public static String CONF_D = "config"
     public static String MOD_D = "modules"
     public static String LOG_D = "logs"
     public static String ROUTES_D = "routes"

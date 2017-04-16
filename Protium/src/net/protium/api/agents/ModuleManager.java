@@ -26,8 +26,6 @@ public interface ModuleManager {
 
     void disableModule(String name) throws NotFoundException;
 
-    URL getModuleURL(String name) throws NotFoundException;
-
     URL getModuleResourceURL(String name, String path) throws NotFoundException;
 
     void setModuleExtendedStatus(String name, String status) throws NotFoundException;

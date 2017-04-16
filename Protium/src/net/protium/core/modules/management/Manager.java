@@ -35,7 +35,7 @@ public class Manager implements ModuleManager {
     private Map<String, Boolean> moduleStatus;
     private Map<String, String> status;
     private ModuleClassLoader moduleClassLoader;
-    private Map<String, URL> modulesURLMap;
+    private Map<String, String> modulesURLMap;
     private static Logger logger = Logger.getLogger(Manager.class.getName());
 
     public Manager() {
@@ -120,11 +120,7 @@ public class Manager implements ModuleManager {
             modules.put(moduleName, newModule);
             moduleStatus.put(moduleName, true);
             status.put(statusName, "ON");
-            try {
-                modulesURLMap.put(moduleName, new URL("jar:file:" + path + "!/"));
-            } catch (MalformedURLException e) {
-                logger.warning("Failed to open url to jar file module: " + path);
-            }
+            modulesURLMap.put(moduleName, ("jar:file:" + path + "!/"));
         }
     }
 
@@ -198,16 +194,6 @@ public class Manager implements ModuleManager {
     }
 
     @Override
-    public URL getModuleURL(String name) throws NotFoundException {
-        if (!modulesURLMap.containsKey(name)) {
-            logger.log(Level.SEVERE, "no moduleURL with name: " + name);
-            throw new NotFoundException();
-        }
-        //
-        return modulesURLMap.get(name);
-    }
-
-    @Override
     public URL getModuleResourceURL(String name, String path) throws NotFoundException {
         if (!modulesURLMap.containsKey(name)) {
             logger.log(Level.SEVERE, "no module URL with name: " + name);
@@ -215,9 +201,9 @@ public class Manager implements ModuleManager {
         }
         //
         try {
-            return new URL(modulesURLMap.get(name).toString() + path);
+            return new URL(modulesURLMap.get(name) + path);
         } catch (MalformedURLException e) {
-            logger.severe("Failed to get URL of: " + modulesURLMap.get(name).toString() + path);
+            logger.severe("Failed to get URL of: " + modulesURLMap.get(name) + path);
         }
         return null;
     }
