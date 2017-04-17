@@ -19,7 +19,7 @@ import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.http.Router;
 import net.protium.core.modules.management.Manager;
 import net.protium.api.utils.Constant;
-import net.protium.api.agents.Functions;
+import net.protium.api.utils.Functions;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;

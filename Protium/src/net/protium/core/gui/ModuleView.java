@@ -93,4 +93,8 @@ class ModuleView {
             return "null";
         }
     }
+
+    public boolean getStatus() {
+        return Protium.manager.getStatus(name.getValue());
+    }
 }

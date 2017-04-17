@@ -7,7 +7,7 @@
 package net.protium.core.modules.management;
 
 import net.protium.api.utils.Constant;
-import net.protium.api.agents.Functions;
+import net.protium.api.utils.Functions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

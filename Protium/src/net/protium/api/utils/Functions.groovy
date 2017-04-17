@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package net.protium.api.agents
+package net.protium.api.utils
 
 import java.nio.file.Files
 import java.nio.file.Paths

@@ -8,7 +8,7 @@ package net.protium.api.agents;
 
 import net.protium.api.exceptions.FileReadException;
 import net.protium.api.utils.Constant;
-import net.protium.api.agents.Functions;
+import net.protium.api.utils.Functions;
 
 import java.io.File;
 import java.io.FileNotFoundException;

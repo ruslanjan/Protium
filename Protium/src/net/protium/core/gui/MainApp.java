@@ -25,6 +25,8 @@ public class MainApp extends Application {
 
 		stage.setTitle("Protium Server ");
 		stage.setScene(scene);
+		stage.setMinWidth(600);
+		stage.setMinHeight(300);
 		stage.show();
 		controller = (MenuController) loader.getController();
 		controller.setMainApp(this);

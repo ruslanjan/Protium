@@ -14,7 +14,7 @@ import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
 import net.protium.core.gui.MainApp;
 import net.protium.api.utils.Constant;
-import net.protium.api.agents.Functions;
+import net.protium.api.utils.Functions;
 import net.protium.api.utils.JSONParser;
 import net.protium.api.utils.Pair;
 
@@ -184,11 +184,20 @@ public class Manager implements ModuleManager {
         return status.get(name);
     }
 
+    /**
+     * return null if module is disabled
+     * @param name
+     * @return
+     * @throws NotFoundException
+     */
     @Override
     public Module getModule(String name) throws NotFoundException {
         if (!modules.containsKey(name)) {
             logger.log(Level.SEVERE, "no module with name: " + name);
             throw new NotFoundException();
+        }
+        if (!moduleStatus.get(name)) {
+            return null;
         }
         return modules.get(name);
     }

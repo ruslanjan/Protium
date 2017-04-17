@@ -6,7 +6,7 @@ import net.protium.api.exceptions.InternalException
 import net.protium.api.exceptions.NotFoundException
 import net.protium.core.modules.management.Manager
 import net.protium.api.utils.Constant
-import net.protium.api.agents.Functions
+import net.protium.api.utils.Functions
 import net.protium.api.utils.JSONParser
 import net.protium.api.utils.Pair
 
