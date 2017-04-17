@@ -38,6 +38,10 @@ class ModuleView {
         this.status.setValue(status);
     }
 
+    public void setStatus(String status) {
+        this.status.setValue(status);
+    }
+
     public StringProperty statusProperty() {
         return status;
     }

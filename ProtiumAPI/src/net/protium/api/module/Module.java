@@ -16,9 +16,7 @@ public abstract class Module {
 
     public abstract void onDisable();
 
-    public String getVersion() {
-        return "null";
-    }
+    //public String getVersion() {
 
 
 }

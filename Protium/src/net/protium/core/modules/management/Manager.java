@@ -119,7 +119,7 @@ public class Manager implements ModuleManager {
             }
             modules.put(moduleName, newModule);
             moduleStatus.put(moduleName, true);
-            status.put(statusName, "ON");
+            status.put(statusName, "on");
             modulesURLMap.put(moduleName, ("jar:file:" + path + "!/"));
         }
     }
@@ -145,8 +145,8 @@ public class Manager implements ModuleManager {
                 logger.severe("Unhandled exception in module: " + name);
             }
             moduleStatus.put(name, false);
-            MainApp.controller.reloadModuleList();
-            status.put(name, "OFF");
+            MainApp.controller.setModuleViewStatus(name, "off");
+            status.put(name, "off");
             logger.info("Module '" + name + "' is disabled");
         } else {
             logger.warning("Module '" + name + "' is already disabled");
@@ -166,9 +166,9 @@ public class Manager implements ModuleManager {
                 logger.severe("Unhandled exception in module: " + name);
             }
             moduleStatus.put(name, true);
+            MainApp.controller.setModuleViewStatus(name, "on");
+            status.put(name, "on");
             logger.info("Module '" + name + "' is enabled");
-            status.put(name, "ON");
-            MainApp.controller.reloadModuleList();
         } else {
             logger.warning("Module '" + name + "' is already enabled");
         }
@@ -218,12 +218,13 @@ public class Manager implements ModuleManager {
     }
 
     @Override
-    public void setModuleExtendedStatus(String ModuleName, String status) throws NotFoundException {
+    public void setModuleViewStatus(String ModuleName, String status) throws NotFoundException {
         if (!this.status.containsKey(ModuleName)) {
             logger.log(Level.SEVERE, "no moduleStatus with name: " + ModuleName);
             throw new NotFoundException();
         }
         this.status.put(ModuleName, status);
+        MainApp.controller.setModuleViewStatus(ModuleName, status);
     }
 
     @Override

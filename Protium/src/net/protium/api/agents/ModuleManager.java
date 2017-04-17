@@ -28,7 +28,7 @@ public interface ModuleManager {
 
     URL getModuleResourceURL(String name, String path) throws NotFoundException;
 
-    void setModuleExtendedStatus(String name, String status) throws NotFoundException;
+    void setModuleViewStatus(String name, String status) throws NotFoundException;
 
     Collection<Pair<String, String>> getModulesAsString();
 }

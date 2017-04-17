@@ -17,9 +17,12 @@ import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
 import net.protium.api.utils.Constant;
 import net.protium.api.utils.Pair;
+import org.apache.tools.ant.taskdefs.condition.Not;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,10 +60,11 @@ public final class MenuController {
 
     private ModuleView curModule;
 
-
     private ObservableList<ModuleView> list = FXCollections.observableArrayList();
 
     private MainApp mainApp;
+
+    private Map<String, ModuleView> moduleViewMap;
 
     @FXML
     private void initialize() {
@@ -73,6 +77,8 @@ public final class MenuController {
             }
         }
 
+        moduleViewMap = new HashMap<>();
+
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         statusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());
 
@@ -80,6 +86,7 @@ public final class MenuController {
 
         moduleTableView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> showModuleDetails(newValue));
+        initializeButtons();
     }
 
     private void initializeButtons() {
@@ -121,14 +128,24 @@ public final class MenuController {
     }
 
     public void reloadModuleList() {
+        moduleViewMap.clear();
         Collection<Pair<String, String>> collection = Protium.manager.getModulesAsString();
         list = FXCollections.observableArrayList();
+        ModuleView moduleView = null;
         for (Pair<String, String> pr:collection) {
-            list.add(new ModuleView(pr.getLeft(), pr.getRight()));
+            moduleView = new ModuleView(pr.getLeft(), pr.getRight());
+            moduleViewMap.put(pr.getLeft(), moduleView);
+            list.add(moduleView);
         }
         moduleTableView.setItems(list);
     }
 
+    public void setModuleViewStatus(String name, String status) throws NotFoundException {
+        if (!moduleViewMap.containsKey(name)) {
+            throw new NotFoundException();
+        }
+        moduleViewMap.get(name).setStatus(status);
+    }
 
     private void showModuleDetails(ModuleView module) {
         if (module != null) {
@@ -136,7 +153,7 @@ public final class MenuController {
             versionLable.setText(module.getVersion());
             authorLable.setText(module.getAuthor());
             description.setText(module.getDescription());
-            enableButton.setDisable(!module.getStatus());
+            enableButton.setDisable(module.getStatus());
             disableButton.setDisable(!module.getStatus());
             curModule = module;
         } else {
