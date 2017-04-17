@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package net.protium.core.utils
+package net.protium.api.utils
 
 import groovy.json.JsonException
 import groovy.json.JsonOutput

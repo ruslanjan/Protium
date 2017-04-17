@@ -4,13 +4,13 @@
  * Proprietary and confidential
  */
 
-package net.protium.core.utils
+package net.protium.api.utils
 
 @SuppressWarnings("GroovyUnusedDeclaration")
 class Constant {
 
 
-    public static String VERSION = "v0.0.0-dev"
+    public static String VERSION = "v0.6.5/dev"
 
     public static String HOME_DIR = "."
 
@@ -26,7 +26,7 @@ class Constant {
     public static String LOG_EXT = ".log.xml"
 
     public static String SERVER_TEXT = "\n" +
-            "<b>Software</b>: Protium/Jetty v9.4.3\n" +
+            "<b>Software</b>: Protium\n" +
             "<b>OS</b>: ${System.getProperty('os.name')} ${System.getProperty('os.version')} ${System.getProperty('os.arch')} \n" +
             "<b>JVM</b>: ${System.getProperty('java.vm.name')} ${System.getProperty('java.version')}/${System.getProperty('java.vm.version')} by ${System.getProperty('java.vendor')}\n" +
             "Running on Protium ${VERSION}"

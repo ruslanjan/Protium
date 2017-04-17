@@ -6,7 +6,7 @@
 
 package net.protium.core.storage
 
-import net.protium.core.utils.Constant
+import net.protium.api.utils.Constant
 
 import java.nio.file.Files
 import java.nio.file.Paths

@@ -7,7 +7,7 @@
 package net.protium.core.cli;
 
 import net.protium.Protium;
-import net.protium.core.utils.Constant;
+import net.protium.api.utils.Constant;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -70,14 +70,14 @@ public class Console {
 		}
 		Collection < Object > objectCollection = new ArrayList <>();
 		Class[] classes = methodMap.get(args[0]).getParameterTypes();
-		if (classes.length != args.length) {
+		if (classes.length != args.length - 1) {
 			logger.severe("Invalid command (args number doesn't match)");
 			return;
 		}
-		for (int i = 0; i < args.length; ++i) {
+		for (int i = 0; i < classes.length; ++i) {
 			try {
 				if (classes[i] != null) {
-					objectCollection.add(classes[i].getConstructor(new Class[]{ String.class }).newInstance(args[i]));
+					objectCollection.add(classes[i].getConstructor(new Class[]{ String.class }).newInstance(args[i + 1]));
 				}
 			} catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 				logger.severe("Failed to execute command: " + Arrays.toString(args));
