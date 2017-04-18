@@ -9,6 +9,8 @@ package net.protium.core.modules.management;
 
 import net.protium.Protium;
 import net.protium.api.agents.ModuleManager;
+import net.protium.api.annotations.OnDisable;
+import net.protium.api.annotations.OnEnable;
 import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.AbstractModule;
 import net.protium.api.module.IModule;
@@ -19,6 +21,9 @@ import net.protium.api.utils.JSONParser;
 import net.protium.api.utils.Pair;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,6 +42,21 @@ public class Manager implements ModuleManager {
     private ModuleClassLoader moduleClassLoader;
     private Map<String, String> modulesURLMap;
     private static Logger logger = Logger.getLogger(Manager.class.getName());
+
+    private static class AnnotationUtil {
+        public static void invokeMethodWithAnnotation(Object obj, Class annotation, Object[] args) {
+            for (Method method : obj.getClass().getMethods()) {
+                Object object = method.getAnnotation(annotation);
+                if (object != null) {
+                    try {
+                        method.invoke(obj, args);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        logger.log(Level.SEVERE, "Invalid args in method: " + method.getName(), e);
+                    }
+                }
+            }
+        }
+    }
 
     public Manager() {
         try {
@@ -112,7 +132,7 @@ public class Manager implements ModuleManager {
             }
             String moduleName = (String) config.get("id");
             try {
-                newModule.onEnable();
+                AnnotationUtil.invokeMethodWithAnnotation(moduleName, OnEnable.class, new Class[]{});
             } catch (Exception e) {
                 logger.severe("Unhandled exception in module: " + moduleName);
             }
@@ -125,6 +145,9 @@ public class Manager implements ModuleManager {
 
     @Override
     public void reloadModules() {
+        for (Map.Entry<String, IModule> entry : modules.entrySet()) {
+            AnnotationUtil.invokeMethodWithAnnotation(entry.getValue(), OnDisable.class, new Class[]{});
+        }
         moduleClassLoader = new ModuleClassLoader(ClassLoader.getSystemClassLoader(),
                 Functions.listFiles(Constant.MOD_DIR, ".jar"));
         loadAll();
@@ -139,7 +162,7 @@ public class Manager implements ModuleManager {
         }
         if (getStatus(name)) {
             try {
-                modules.get(name).onDisable();
+                AnnotationUtil.invokeMethodWithAnnotation(modules.get(name), OnDisable.class, new Class[]{});
             } catch (Exception e) {
                 logger.severe("Unhandled exception in module: " + name);
             }
@@ -160,7 +183,7 @@ public class Manager implements ModuleManager {
         }
         if (!getStatus(name)) {
             try {
-                modules.get(name).onEnable();
+                AnnotationUtil.invokeMethodWithAnnotation(modules.get(name), OnEnable.class, new Class[]{});
             } catch (Exception e) {
                 logger.severe("Unhandled exception in module: " + name);
             }
@@ -185,6 +208,7 @@ public class Manager implements ModuleManager {
 
     /**
      * return null if module is disabled
+     *
      * @param name
      * @return
      * @throws NotFoundException
@@ -229,7 +253,7 @@ public class Manager implements ModuleManager {
     @Override
     public Collection<Pair<String, String>> getModulesAsString() {
         Collection<Pair<String, String>> collection = new ArrayList<>();
-        for (Map.Entry<String, String> entry: status.entrySet()) {
+        for (Map.Entry<String, String> entry : status.entrySet()) {
             collection.add(new Pair<>(entry.getKey(), entry.getValue()));
         }
         return collection;
@@ -254,7 +278,7 @@ public class Manager implements ModuleManager {
 
     @Override
     protected void finalize() throws Throwable {
-        for (Map.Entry<String, IModule> entry: modules.entrySet()) {
+        for (Map.Entry<String, IModule> entry : modules.entrySet()) {
             entry.getValue().onDisable();
         }
         super.finalize();

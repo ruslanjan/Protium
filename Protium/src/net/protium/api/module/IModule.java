@@ -11,10 +11,5 @@ import net.protium.api.events.Request;
 import net.protium.api.events.Response;
 
 public interface IModule {
-
-    void onEnable();
-
     Response onRequest(Request request);
-
-    void onDisable();
 }
