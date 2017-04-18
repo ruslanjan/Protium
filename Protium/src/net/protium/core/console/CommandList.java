@@ -4,14 +4,8 @@
  * Proprietary and confidential
  */
 
-package net.protium.api.events;
+package net.protium.core.console;
 
-public interface Response {
-
-	String getContentType();
-
-	String getResponse();
-
-	Integer getStatus();
-
+public interface CommandList {
+	Executable get(String commandName);
 }

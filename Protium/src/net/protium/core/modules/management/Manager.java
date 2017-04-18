@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Ruslan Jankurazov, Dmitry Ussoltsev - All Rights Reserved
+ * Copyright (C) 2017 Protium - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -279,7 +279,7 @@ public class Manager implements ModuleManager {
     @Override
     protected void finalize() throws Throwable {
         for (Map.Entry<String, IModule> entry : modules.entrySet()) {
-            entry.getValue().onDisable();
+            AnnotationUtil.invokeMethodWithAnnotation(entry.getValue(), OnDisable.class, new Class[]{});
         }
         super.finalize();
     }

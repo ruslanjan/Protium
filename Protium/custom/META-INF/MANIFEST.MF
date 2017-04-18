@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Class-Path: jetty-all-9.4.3.v20170317-uber.jar ant-1.9.4.jar ant-antlr
  -1.9.4.jar ant-junit-1.9.4.jar ant-launcher-1.9.4.jar bsf-2.4.0.jar c
  ommons-cli-1.2.jar commons-logging-1.2.jar gpars-1.2.1.jar groovy-2.4
- .10.jar groovy-ant-2.4.10.jar groovy-bsf-2.4.10.jar groovy-console-2.
+ .10.jar groovy-ant-2.4.10.jar groovy-bsf-2.4.10.jar groovy-net.protium.core.console-2.
  4.10.jar groovy-docgenerator-2.4.10.jar groovy-groovydoc-2.4.10.jar g
  roovy-groovysh-2.4.10.jar groovy-jmx-2.4.10.jar groovy-json-2.4.10.ja
  r groovy-jsr223-2.4.10.jar groovy-nio-2.4.10.jar groovy-servlet-2.4.1

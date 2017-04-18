@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Ruslan Jankurazov, Dmitry Ussoltsev - All Rights Reserved
+ * Copyright (C) 2017 Protium - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -12,7 +12,9 @@ import net.protium.api.agents.Config;
 import net.protium.api.events.Response;
 import net.protium.api.exceptions.FileReadException;
 import net.protium.api.exceptions.NotFoundException;
-import net.protium.core.cli.Console;
+import net.protium.core.console.BasicCommandList;
+import net.protium.core.console.BasicExecutable;
+import net.protium.core.console.JConsole;
 import net.protium.core.gui.GUIThread;
 import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
@@ -210,18 +212,31 @@ public class Protium extends AbstractHandler {
 
 		runGUI();
 
-		Console console = new Console();
-
-		try {
-			console.start();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-
-		//modmgrLastReload = routerLastReload = System.currentTimeMillis();
+        try {
+            runConsole();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        //modmgrLastReload = routerLastReload = System.currentTimeMillis();
 	}
 
-	//Run this to open GUI
+    private static void runConsole() throws NoSuchMethodException {
+        BasicCommandList commandList = new BasicCommandList();
+        JConsole console = new JConsole(commandList);
+        commandList.register("reloadModules",
+                new BasicExecutable(manager.getClass().getMethod("reloadModules"), manager));
+        commandList.register("enableModule",
+                new BasicExecutable(manager.getClass().getMethod("enableModule", String.class), manager));
+        commandList.register("disableModule",
+                new BasicExecutable(manager.getClass().getMethod("disableModule", String.class), manager));
+        commandList.register("getStat",
+                new BasicExecutable(manager.getClass().getMethod("getStatus", String.class), manager));
+        commandList.register("getStatus",
+                new BasicExecutable(manager.getClass().getMethod("getExtendedStatus", String.class), manager));
+        console.run();
+    }
+
+    //Run this to open GUI
 	public static void runGUI() {
 		Thread guiThread = new Thread(new GUIThread());
 		guiThread.start();
