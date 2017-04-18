@@ -9,15 +9,17 @@ package net.protium.core.gui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.StackedAreaChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
 import net.protium.Protium;
 import net.protium.api.exceptions.NotFoundException;
-import net.protium.api.module.Module;
 import net.protium.api.utils.Constant;
 import net.protium.api.utils.Pair;
-import org.apache.tools.ant.taskdefs.condition.Not;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -31,32 +33,16 @@ public final class MenuController {
 
     private static Logger logger = null;
 
-    @FXML
-    private TableView<ModuleView> moduleTableView;
-
-    @FXML
-    private TableColumn<ModuleView, String> nameColumn;
-
-    @FXML
-    private TableColumn<ModuleView, String> statusColumn;
-
-    @FXML
-    private Label nameLable;
-
-    @FXML
-    private Label versionLable;
-
-    @FXML
-    private Label authorLable;
-
-    @FXML
-    private TextArea description;
-
-    @FXML
-    private Button enableButton;
-
-    @FXML
-    private Button disableButton;
+    @FXML private TableView<ModuleView> moduleTableView;
+    @FXML private TableColumn<ModuleView, String> nameColumn;
+    @FXML private TableColumn<ModuleView, String> statusColumn;
+    @FXML private Label nameLable;
+    @FXML private Label versionLable;
+    @FXML private Label authorLable;
+    @FXML private TextArea description;
+    @FXML private Button enableButton;
+    @FXML private Button disableButton;
+    @FXML private Button reloadModuleButton;
 
     private ModuleView curModule;
 
@@ -66,8 +52,7 @@ public final class MenuController {
 
     private Map<String, ModuleView> moduleViewMap;
 
-    @FXML
-    private void initialize() {
+    @FXML private void initialize() {
         if (logger == null) {
             logger = Logger.getLogger(ModuleView.class.getName());
             try {
@@ -77,6 +62,12 @@ public final class MenuController {
             }
         }
 
+        initModuleTableView();
+
+        initializeButtons();
+    }
+
+    private void initModuleTableView() {
         moduleViewMap = new HashMap<>();
 
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -86,12 +77,18 @@ public final class MenuController {
 
         moduleTableView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> showModuleDetails(newValue));
-        initializeButtons();
     }
 
     private void initializeButtons() {
         enableButton.setOnAction(this::onEnable);
         disableButton.setOnAction(this::onDisable);
+        reloadModuleButton.setOnAction(this::onReloadModuleButton);
+    }
+
+    private void onReloadModuleButton(ActionEvent event) {
+        reloadModuleButton.setDisable(true);
+        Protium.manager.reloadModules();
+        reloadModuleButton.setDisable(false);
     }
 
     private void onEnable(ActionEvent event) {
@@ -100,7 +97,7 @@ public final class MenuController {
         try {
             Protium.manager.enableModule(curModule.nameProperty().getValue());
         } catch (NotFoundException e) {
-            logger.log(Level.SEVERE, "Failed to enable Module", e);
+            logger.log(Level.SEVERE, "Failed to enable IModule", e);
             enableButton.setDisable(false);
             disableButton.setDisable(true);
             return;
@@ -114,7 +111,7 @@ public final class MenuController {
         try {
             Protium.manager.disableModule(curModule.nameProperty().getValue());
         } catch (NotFoundException e) {
-            logger.log(Level.SEVERE, "Failed to enable Module", e);
+            logger.log(Level.SEVERE, "Failed to enable IModule", e);
             enableButton.setDisable(true);
             disableButton.setDisable(false);
             return;

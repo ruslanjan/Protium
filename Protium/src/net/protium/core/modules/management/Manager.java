@@ -8,10 +8,10 @@ package net.protium.core.modules.management;
 
 
 import net.protium.Protium;
-import net.protium.api.agents.CoreAgent;
 import net.protium.api.agents.ModuleManager;
 import net.protium.api.exceptions.NotFoundException;
-import net.protium.api.module.Module;
+import net.protium.api.module.AbstractModule;
+import net.protium.api.module.IModule;
 import net.protium.core.gui.MainApp;
 import net.protium.api.utils.Constant;
 import net.protium.api.utils.Functions;
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 public class Manager implements ModuleManager {
 
-    private Map<String, Module> modules;
+    private Map<String, IModule> modules;
     private Map<String, Boolean> moduleStatus;
     private Map<String, String> status;
     private ModuleClassLoader moduleClassLoader;
@@ -46,8 +46,6 @@ public class Manager implements ModuleManager {
             logger.log(Level.SEVERE, "Failed to write logs", e);
         }
 
-        CoreAgent.setModuleManager(this);
-
         modules = new HashMap<>();
         moduleStatus = new HashMap<>();
         moduleClassLoader = new ModuleClassLoader(ClassLoader.getSystemClassLoader(),
@@ -55,6 +53,7 @@ public class Manager implements ModuleManager {
         status = new HashMap<>();
         modulesURLMap = new HashMap<>();
 
+        AbstractModule.moduleManager = this;
         loadAll();
     }
 
@@ -89,7 +88,7 @@ public class Manager implements ModuleManager {
                 continue;
             }
             if (modules.containsKey(config.get("id"))) {
-                logger.warning("Module duplicated: " + config.getString("id"));
+                logger.warning("IModule duplicated: " + config.getString("id"));
                 status.put(statusName, "WAR");
                 continue;
             }
@@ -99,13 +98,13 @@ public class Manager implements ModuleManager {
             try {
                 c = moduleClassLoader.loadClass(mainClassPath);
             } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, "Load Module FAILED: main Class not found", e);
+                logger.log(Level.SEVERE, "Load IModule FAILED: main Class not found", e);
                 status.put(statusName, "ERR");
                 continue;
             }
-            Module newModule;
+            IModule newModule;
             try {
-                newModule = ((Module) c.newInstance());
+                newModule = ((IModule) c.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
                 logger.log(Level.SEVERE, "FAILED: Can not create an instance of " + c.getName(), e);
                 status.put(statusName, "ERR");
@@ -147,9 +146,9 @@ public class Manager implements ModuleManager {
             moduleStatus.put(name, false);
             MainApp.controller.setModuleViewStatus(name, "off");
             status.put(name, "off");
-            logger.info("Module '" + name + "' is disabled");
+            logger.info("IModule '" + name + "' is disabled");
         } else {
-            logger.warning("Module '" + name + "' is already disabled");
+            logger.warning("IModule '" + name + "' is already disabled");
         }
     }
 
@@ -168,9 +167,9 @@ public class Manager implements ModuleManager {
             moduleStatus.put(name, true);
             MainApp.controller.setModuleViewStatus(name, "on");
             status.put(name, "on");
-            logger.info("Module '" + name + "' is enabled");
+            logger.info("IModule '" + name + "' is enabled");
         } else {
-            logger.warning("Module '" + name + "' is already enabled");
+            logger.warning("IModule '" + name + "' is already enabled");
         }
     }
 
@@ -191,7 +190,7 @@ public class Manager implements ModuleManager {
      * @throws NotFoundException
      */
     @Override
-    public Module getModule(String name) throws NotFoundException {
+    public IModule getModule(String name) throws NotFoundException {
         if (!modules.containsKey(name)) {
             logger.log(Level.SEVERE, "no module with name: " + name);
             throw new NotFoundException();
@@ -255,7 +254,7 @@ public class Manager implements ModuleManager {
 
     @Override
     protected void finalize() throws Throwable {
-        for (Map.Entry<String, Module> entry: modules.entrySet()) {
+        for (Map.Entry<String, IModule> entry: modules.entrySet()) {
             entry.getValue().onDisable();
         }
         super.finalize();

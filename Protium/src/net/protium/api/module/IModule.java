@@ -6,19 +6,15 @@
 
 package net.protium.api.module;
 
+import net.protium.api.agents.ModuleManager;
 import net.protium.api.events.Request;
 import net.protium.api.events.Response;
 
-public abstract class Module {
-    public abstract void onEnable();
+public interface IModule {
 
-    public abstract Response onRequest(Request request);
+    void onEnable();
 
-    public abstract void onDisable();
+    Response onRequest(Request request);
 
-    public String getVersion() {
-        return "null";
-    }
-
-
+    void onDisable();
 }

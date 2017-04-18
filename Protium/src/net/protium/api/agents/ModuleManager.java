@@ -7,7 +7,7 @@
 package net.protium.api.agents;
 
 import net.protium.api.exceptions.NotFoundException;
-import net.protium.api.module.Module;
+import net.protium.api.module.IModule;
 import net.protium.api.utils.Pair;
 
 import java.net.URL;
@@ -16,7 +16,7 @@ import java.util.Collection;
 public interface ModuleManager {
     String getExtendedStatus(String name);
 
-    Module getModule(String name) throws NotFoundException;
+    IModule getModule(String name) throws NotFoundException;
 
     void reloadModules();
 
