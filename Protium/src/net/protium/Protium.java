@@ -221,6 +221,7 @@ public class Protium extends AbstractHandler {
 		//modmgrLastReload = routerLastReload = System.currentTimeMillis();
 	}
 
+	//Run this to open GUI
 	public static void runGUI() {
 		Thread guiThread = new Thread(new GUIThread());
 		guiThread.start();
