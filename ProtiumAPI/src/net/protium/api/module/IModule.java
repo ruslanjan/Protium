@@ -4,14 +4,11 @@
  * Proprietary and confidential
  */
 
-package net.protium.api.events;
+package net.protium.api.module;
 
-public interface Response {
+import net.protium.api.events.Request;
+import net.protium.api.events.Response;
 
-	String getContentType( );
-
-	String getResponse( );
-
-	Integer getStatus( );
-
+public interface IModule {
+	Response onRequest(Request request);
 }

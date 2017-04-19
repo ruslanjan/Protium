@@ -1,12 +1,12 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
 
 package net.protium.api.utils;
 
-public class Pair< L, R > {
+public class Pair < L, R > {
 
 	private final L left;
 	private final R right;
@@ -37,7 +37,7 @@ public class Pair< L, R > {
 			this.right.equals(pairo.getRight());
 	}
 
-	public String toString() {
+	public String toString( ) {
 		return "{ " + left.toString() + ", " + right.toString() + " }";
 	}
 }

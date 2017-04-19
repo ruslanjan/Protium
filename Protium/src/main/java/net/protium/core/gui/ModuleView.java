@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -10,7 +10,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import net.protium.Protium;
 import net.protium.api.utils.Constant;
-import net.protium.core.utils.JSONParser;
+import net.protium.api.utils.Functions;
+import net.protium.api.utils.JSONParser;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -85,7 +86,8 @@ class ModuleView {
 			return "null";
 		}
 		if (config.checkPath("description")) {
-			return config.getString("description");
+			return Functions.implode(
+				(String[]) config.getArrayList("description").toArray(), "\n");
 		} else {
 			return "null";
 		}

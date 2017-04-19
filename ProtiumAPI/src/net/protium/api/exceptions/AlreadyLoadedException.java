@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -11,11 +11,11 @@ import java.io.StringWriter;
 import java.util.logging.Logger;
 
 public class AlreadyLoadedException extends Exception {
-    private static final Logger logger = Logger.getLogger("AlreadyLoadedException");
+	private static final Logger logger = Logger.getLogger("AlreadyLoadedException");
 
-    public AlreadyLoadedException() {
-        StringWriter trace = new StringWriter();
-        printStackTrace(new PrintWriter(trace));
-        logger.severe(trace.toString());
-    }
+	public AlreadyLoadedException( ) {
+		StringWriter trace = new StringWriter();
+		printStackTrace(new PrintWriter(trace));
+		logger.severe(trace.toString());
+	}
 }

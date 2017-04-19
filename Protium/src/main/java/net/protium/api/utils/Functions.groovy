@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -10,7 +10,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Matcher
 import java.util.stream.Collectors
-
 
 final class Functions {
     static String implode(String[] array, String glue) {
@@ -87,4 +86,5 @@ final class Functions {
     static Integer min(Integer a, Integer b) {
         (a < b ? a : b)
     }
+
 }

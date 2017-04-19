@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -9,7 +9,6 @@ package net.protium.api.utils
 import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import net.protium.api.agents.Functions
 import net.protium.api.exceptions.ArgumentException
 
 class AbstractJSONParser {
@@ -138,6 +137,7 @@ class AbstractJSONParser {
             )
             writer.close()
         }
+
         this
     }
 

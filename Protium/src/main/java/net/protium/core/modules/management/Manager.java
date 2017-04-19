@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -7,6 +7,7 @@
 package net.protium.core.modules.management;
 
 
+import groovy.json.JsonException;
 import net.protium.Protium;
 import net.protium.api.agents.ModuleManager;
 import net.protium.api.annotations.OnDisable;
@@ -16,9 +17,9 @@ import net.protium.api.module.AbstractModule;
 import net.protium.api.module.IModule;
 import net.protium.api.utils.Constant;
 import net.protium.api.utils.Functions;
+import net.protium.api.utils.JSONParser;
 import net.protium.api.utils.Pair;
 import net.protium.core.gui.MainApp;
-import net.protium.core.utils.JSONParser;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -80,17 +81,17 @@ public class Manager implements ModuleManager {
 			}
 			JSONParser config;
 			try {
-				config = new JSONParser(confUrl.openStream());
+				config = new JSONParser(confUrl.openStream(), "module");
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, "Failed to open module.json in jarfile: " + path, e);
 				status.put(statusName, "ERR");
 				continue;
-			}
-			if (!checkJSONSchema(config)) {
-				logger.severe("Invalid schema in module.json in jar: " + path);
+			} catch (JsonException e) {
+				logger.log(Level.SEVERE, "Invalid schema in module.json in jar: " + path, e);
 				status.put(statusName, "ERR");
 				continue;
 			}
+
 			if (modules.containsKey(config.getString("id"))) {
 				logger.warning("IModule duplicated: " + config.getString("id"));
 				status.put(statusName, "WAR");
@@ -253,9 +254,11 @@ public class Manager implements ModuleManager {
 		}
 		JSONParser config = null;
 		try {
-			config = new JSONParser(confUrl.openStream());
+			config = new JSONParser(confUrl.openStream(), "module");
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to open module.json in jarfile: " + confUrl.toString(), e);
+		} catch (JsonException e) {
+			logger.log(Level.SEVERE, "Invalid schema in module.json in jar: " + confUrl.toString(), e);
 		}
 		return config;
 	}
@@ -266,10 +269,6 @@ public class Manager implements ModuleManager {
 			AnnotationUtil.invokeMethodWithAnnotation(entry.getValue(), OnDisable.class, new Class[]{ });
 		}
 		super.finalize();
-	}
-
-	private boolean checkJSONSchema(JSONParser config) {
-		return !(!config.checkPath("id") || !config.checkPath("mainClass"));
 	}
 
 	private static class AnnotationUtil {

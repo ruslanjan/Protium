@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
 
 package net.protium.api.agents;
 
+import groovy.json.JsonException;
 import net.protium.api.exceptions.FileReadException;
 import net.protium.api.utils.AbstractJSONParser;
 import net.protium.api.utils.Constant;
@@ -17,8 +18,13 @@ import java.io.IOException;
 import java.net.URL;
 
 public class Config extends AbstractJSONParser {
+
 	public Config(String configName) throws IOException, FileReadException {
-		init(configName);
+		this(configName, null);
+	}
+
+	public Config(String configName, String schema) throws IOException, FileReadException {
+		init(configName, schema);
 	}
 
 	public static boolean createConfig(String configName) throws IOException {
@@ -41,14 +47,19 @@ public class Config extends AbstractJSONParser {
 		return (new File(filePath)).exists();
 	}
 
-	protected void init(String configName) throws FileReadException, FileNotFoundException {
+	protected void init(String configName, String schema) throws FileReadException, FileNotFoundException, JsonException {
 		String filePath = Functions.pathToFile(Constant.CONF_DIR, configName, Constant.CONF_EXT);
 
 		file = new File(filePath);
 
 		data = AbstractJSONParser.openFile(file);
 
-		if (data == null) throw new FileReadException();
+		if (data == null)
+			throw new FileReadException();
+
+		if (schema != null && !validate(schema)) {
+			throw new JsonException();
+		}
 	}
 
 }

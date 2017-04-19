@@ -1,14 +1,13 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
 
-package net.protium.core.utils
+package net.protium.api.utils
 
 import groovy.json.JsonException
 import groovy.json.JsonSlurper
-import net.protium.api.utils.AbstractJSONParser
 
 class JSONParser extends AbstractJSONParser {
 
@@ -20,18 +19,27 @@ class JSONParser extends AbstractJSONParser {
         (new JsonSlurper()).parse(string.toCharArray())
     }
 
-    JSONParser(File file) throws JsonException {
+    JSONParser(File file, String schema = null) throws JsonException {
         this.file = file
         data = openFile(file)
+        if (schema != null && !validate(schema)) {
+            throw new JsonException()
+        }
     }
 
-    JSONParser(InputStream stream) throws JsonException {
+    JSONParser(InputStream stream, String schema = null) throws JsonException {
         file = null
         data = openStream(stream)
+        if (schema != null && !validate(schema)) {
+            throw new JsonException()
+        }
     }
 
-    JSONParser(String string) throws JsonException {
+    JSONParser(String string, String schema = null) throws JsonException {
         file = null
         data = openString(string)
+        if (schema != null && !validate(schema)) {
+            throw new JsonException()
+        }
     }
 }

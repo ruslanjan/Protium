@@ -1,0 +1,31 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Protium Module",
+	"type": "object",
+	"description": "Schema of Protium module's 'module.json' manifest file.",
+	"properties": {
+		"mainClass": {
+			"type": "string"
+		},
+		"id": {
+			"type": "string"
+		},
+		"name": {
+			"type": "string"
+		},
+		"version": {
+			"type": "string"
+		},
+		"author": {
+			"type": "string"
+		},
+		"description": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "string"
+			}
+		}
+	},
+	"required": [ "id", "mainClass" ]
+}

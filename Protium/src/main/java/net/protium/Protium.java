@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -35,8 +35,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +62,7 @@ public class Protium extends AbstractHandler {
 	private static void initialize( ) {
 
 		/* Create necessary dirs */
-		String[] paths = { Constant.CONF_DIR, Constant.DATA_DIR, Constant.LOG_DIR, Constant.MOD_DIR, Constant.RES_DIR, Constant.ROUTES_DIR };
+		String[] paths = { Constant.CONF_DIR, Constant.DATA_DIR, Constant.LOG_DIR, Constant.MOD_DIR, Constant.RES_DIR, Constant.ROUTES_DIR, Constant.SCHEMA_DIR };
 
 		for (String path : paths)
 			if (!Files.exists(Paths.get(path))) {
@@ -79,9 +84,38 @@ public class Protium extends AbstractHandler {
 			logger.log(Level.SEVERE, "Failed to initalize logger.", e);
 		}
 
+		/* Unpack JSON Schemas */
+
+		try {
+			JarFile jarFile = new JarFile(new File(Protium.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()));
+
+			Enumeration < JarEntry > entries = jarFile.entries();
+
+			for (JarEntry jarEntry = entries.nextElement(); entries.hasMoreElements(); jarEntry = entries.nextElement()) {
+				if (
+					(jarEntry.getName().startsWith("schemas/") ||
+						jarEntry.getName().startsWith("/schemas/")) &&
+						(jarEntry.getName().endsWith(Constant.SCHEMA_EXT))
+					) {
+
+					Path filePath = Paths.get(Functions.createFile(
+						Constant.SCHEMA_DIR,
+						jarEntry.getName().split("[/.]")[1],
+						Constant.SCHEMA_EXT));
+					if (Files.exists(filePath))
+						continue;
+					Files.copy(
+						jarFile.getInputStream(jarEntry),
+						filePath);
+				}
+			}
+		} catch (IOException | URISyntaxException e) {
+			logger.log(Level.SEVERE, "Failed to copy JSON schemas from JAR! Please, download and install them manually.", e);
+		}
+
 		/* Read configs */
 		try {
-			conf = new Config("server");
+			conf = new Config("server", "server");
 		} catch (IOException | FileReadException e) {
 			logger.log(Level.OFF, "Failed to read 'server' config.", e);
 			System.exit(-3);
