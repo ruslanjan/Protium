@@ -17,4 +17,5 @@ class C {
     public static final String DB_UNIT = "PAuth_Default"
 
     public static final String DB_CONF = "${MODULE_NAME}.conf/db-profiles"
+    public static final String GAPI_CONF = "${MODULE_NAME}.conf/google-api"
 }

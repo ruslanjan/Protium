@@ -12,6 +12,7 @@ From temporary-protium
 
 import net.protium.modules.pauth.database.orm.User;
 import net.protium.modules.pauth.utils.C;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -45,18 +46,51 @@ public class UserManager {
 		}
 	}
 
-	public boolean verifyLogin(String login, String password) {
+	public Integer verifyLogin(String login, String password) {
 		User user;
+
 		try {
-			//noinspection UnusedAssignment
 			user = (User) entityManager
-				.createQuery("select User.password from User where login=?")
+				.createQuery("select User.password, User.id from User where login=?")
 				.setParameter(0, login)
 				.getSingleResult();
 		} catch (NoResultException e) {
-			return false;
+			return null;
 		}
-		return true;
+
+		if (BCrypt.checkpw(password, user.getPassword())) {
+			return user.getId();
+		}
+
+		return null;
+	}
+
+	public String newSession(Integer id) {
+		User user = getByID(id);
+		String session = user.getLogin() + ":" + user.getPassword();
+
+		session = user.getId() + ":" + BCrypt.hashpw(session, BCrypt.gensalt());
+
+		return String.valueOf(session);
+	}
+
+	public boolean verifySession(String session) {
+		String[] divided = session.split(":");
+		if (divided.length < 2)
+			return false;
+
+		Integer userId = Integer.valueOf(divided[0]);
+		User user = getByID(userId);
+		String sessionHash = divided[1];
+
+		return BCrypt.checkpw(user.getLogin() + ":" + user.getPassword(), sessionHash);
+	}
+
+	public User newUser(String login, String email, String password, String firstName, String middleName, String lastName, String googleBinding) {
+		User user = new User(login, email, password, firstName, middleName, lastName, googleBinding);
+		entityManager.persist(user);
+
+		return user;
 	}
 
 	public void start( ) {

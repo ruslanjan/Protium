@@ -41,7 +41,7 @@ public class User {
 	@Column(name = "last_name")
 	private String lastName = "";
 
-	@Column(name = "google_bind")
+	@Column(name = "oauth_bind")
 	private String googleBind;
 	//endregion
 
