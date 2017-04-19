@@ -11,7 +11,7 @@ import java.io.StringWriter;
 import java.util.logging.Logger;
 
 public class FileReadException extends Exception {
-    private static Logger logger = Logger.getLogger("FileReadException");
+    private static final Logger logger = Logger.getLogger("FileReadException");
 
     public FileReadException() {
         StringWriter trace = new StringWriter();

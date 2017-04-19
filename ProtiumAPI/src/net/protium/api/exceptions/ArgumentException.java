@@ -11,7 +11,7 @@ import java.io.StringWriter;
 import java.util.logging.Logger;
 
 public class ArgumentException extends Exception {
-	private static Logger logger = Logger.getLogger("ArgumentException");
+	private static final Logger logger = Logger.getLogger("ArgumentException");
 
 	public ArgumentException() {
 		StringWriter trace = new StringWriter();

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class ConfigException extends Exception {
 	private static final Logger logger = Logger.getLogger("FileReadException");
 
-	public ConfigException() {
+	public ConfigException( ) {
 		StringWriter trace = new StringWriter();
 		printStackTrace(new PrintWriter(trace));
 		logger.severe(trace.toString());

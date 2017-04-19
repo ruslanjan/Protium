@@ -20,6 +20,6 @@ public class InternalException extends Exception {
 
 	@Override
 	public String getMessage( ) {
-		return  message;
+		return message;
 	}
 }

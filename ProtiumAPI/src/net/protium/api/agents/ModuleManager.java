@@ -6,7 +6,6 @@
 
 package net.protium.api.agents;
 
-import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.module.Module;
 import net.protium.api.utils.Pair;
 
@@ -16,19 +15,19 @@ import java.util.Collection;
 public interface ModuleManager {
     String getExtendedStatus(String name);
 
-    Module getModule(String name) throws NotFoundException;
+    Module getModule(String name);
 
     void reloadModules();
 
     boolean getStatus(String name);
 
-    void enableModule(String name) throws NotFoundException;
+    void enableModule(String name);
 
-    void disableModule(String name) throws NotFoundException;
+    void disableModule(String name);
 
-    URL getModuleResourceURL(String name, String path) throws NotFoundException;
+    URL getModuleResourceURL(String name, String path);
 
-    void setModuleExtendedStatus(String name, String status) throws NotFoundException;
+    void setModuleExtendedStatus(String name, String status);
 
     Collection<Pair<String, String>> getModulesAsString();
 }

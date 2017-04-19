@@ -11,7 +11,7 @@ import java.io.StringWriter;
 import java.util.logging.Logger;
 
 public class AlreadyLoadedException extends Exception {
-    private static Logger logger = Logger.getLogger("AlreadyLoadedException");
+    private static final Logger logger = Logger.getLogger("AlreadyLoadedException");
 
     public AlreadyLoadedException() {
         StringWriter trace = new StringWriter();
