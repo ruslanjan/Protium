@@ -10,6 +10,7 @@ import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import net.protium.api.exceptions.ArgumentException
+import net.protium.api.utils.jsonschema.JSONSchema
 
 class AbstractJSONParser {
 
@@ -56,6 +57,18 @@ class AbstractJSONParser {
         }
 
         current
+    }
+
+    boolean validate(String schemaName) {
+        try {
+            String filePath = "file://" + Functions.pathToFile(Constant.SCHEMA_DIR, schemaName, Constant.SCHEMA_EXT)
+            use(JSONSchema) {
+                this.data.schema = filePath
+                this.data.conformsSchema()
+            }
+        } catch (Exception ignored) {
+            true
+        }
     }
 
     boolean checkPath(String propertyPath) {

@@ -6,6 +6,7 @@
 
 package net.protium.api.agents;
 
+import groovy.json.JsonException;
 import net.protium.api.exceptions.FileReadException;
 import net.protium.api.utils.Constant;
 import net.protium.api.utils.Functions;
@@ -16,12 +17,16 @@ import java.io.IOException;
 
 public class RouteConfig extends Config {
 
-	public RouteConfig(String configName) throws IOException, FileReadException {
-		super(configName);
+	public RouteConfig(String configName) throws IOException, FileReadException, JsonException {
+		this(configName, "route");
+	}
+
+	public RouteConfig(String configName, String schema) throws IOException, FileReadException, JsonException {
+		super(configName, schema);
 	}
 
 	@Override
-	protected void init(String configName) throws FileReadException, FileNotFoundException {
+	protected void init(String configName, String schema) throws FileReadException, FileNotFoundException {
 		String filePath = Functions.pathToFile(Constant.ROUTES_DIR, configName, ".json");
 		file = new File(filePath);
 
@@ -30,5 +35,9 @@ public class RouteConfig extends Config {
 
 		if (data == null)
 			throw new FileReadException();
+
+		if (schema != null && !validate(schema)) {
+			throw new JsonException();
+		}
 	}
 }

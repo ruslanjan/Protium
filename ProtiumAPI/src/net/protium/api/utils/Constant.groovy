@@ -20,10 +20,12 @@ class Constant {
     public static String ROUTES_DIR = "routes"
     public static String RES_DIR = "resources"
     public static String DATA_DIR = "data"
+    public static String SCHEMA_DIR = "schemas"
 
     public static String MOD_EXT = ".jar"
     public static String CONF_EXT = ".json"
     public static String LOG_EXT = ".log.xml"
+    public static String SCHEMA_EXT = ".schema.json"
 
     public static String SERVER_TEXT = "\n" +
             "<b>Software</b>: Protium\n" +

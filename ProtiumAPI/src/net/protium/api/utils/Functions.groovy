@@ -11,7 +11,6 @@ import java.nio.file.Paths
 import java.util.regex.Matcher
 import java.util.stream.Collectors
 
-
 final class Functions {
     static String implode(String[] array, String glue) {
         StringBuilder builder = new StringBuilder()
@@ -87,4 +86,5 @@ final class Functions {
     static Integer min(Integer a, Integer b) {
         (a < b ? a : b)
     }
+
 }

@@ -19,18 +19,27 @@ class JSONParser extends AbstractJSONParser {
         (new JsonSlurper()).parse(string.toCharArray())
     }
 
-    JSONParser(File file) throws JsonException {
+    JSONParser(File file, String schema = null) throws JsonException {
         this.file = file
         data = openFile(file)
+        if (schema != null && !validate(schema)) {
+            throw new JsonException()
+        }
     }
 
-    JSONParser(InputStream stream) throws JsonException {
+    JSONParser(InputStream stream, String schema = null) throws JsonException {
         file = null
         data = openStream(stream)
+        if (schema != null && !validate(schema)) {
+            throw new JsonException()
+        }
     }
 
-    JSONParser(String string) throws JsonException {
+    JSONParser(String string, String schema = null) throws JsonException {
         file = null
         data = openString(string)
+        if (schema != null && !validate(schema)) {
+            throw new JsonException()
+        }
     }
 }
