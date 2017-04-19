@@ -11,7 +11,7 @@ import java.io.StringWriter;
 import java.util.logging.Logger;
 
 public class NotLoadedException extends Exception {
-    private static Logger logger = Logger.getLogger("NotLoadedException");
+    private static final Logger logger = Logger.getLogger("NotLoadedException");
 
     public NotLoadedException() {
         StringWriter trace = new StringWriter();

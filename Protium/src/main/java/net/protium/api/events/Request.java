@@ -9,21 +9,21 @@ package net.protium.api.events;
 import java.util.Map;
 
 public interface Request {
-	String getMethod();
+	String getMethod( );
 
-	String getRawData();
+	String getRawData( );
 
-	Object getSpecialData();
+	Object getSpecialData( );
 
-	Object getHeaders();
+	Object getHeaders( );
 
-	String getAction();
+	String getAction( );
 
-	Map getOptions();
+	Map getOptions( );
 
-	String getURL();
+	String getURL( );
 
-	String getRawQueryString();
+	String getRawQueryString( );
 
-	Map getQuery();
+	Map getQuery( );
 }

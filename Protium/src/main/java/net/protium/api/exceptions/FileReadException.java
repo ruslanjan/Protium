@@ -10,15 +10,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Logger;
 
-/**
- * From: protium
- * Pkg: net.protium.net.protium.api.exceptions
- * At: 11.04.17
- */
-public class ConfigException extends Exception {
+public class FileReadException extends Exception {
 	private static final Logger logger = Logger.getLogger("FileReadException");
 
-	public ConfigException() {
+	public FileReadException( ) {
 		StringWriter trace = new StringWriter();
 		printStackTrace(new PrintWriter(trace));
 		logger.severe(trace.toString());

@@ -8,10 +8,8 @@ package net.protium.api.agents;
 
 import net.protium.api.exceptions.FileReadException;
 import net.protium.api.utils.Constant;
-import net.protium.api.agents.Functions;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class RouteConfig extends Config {
@@ -21,7 +19,7 @@ public class RouteConfig extends Config {
 	}
 
 	@Override
-	protected void init(String configName) throws FileReadException, FileNotFoundException {
+	protected void init(String configName) throws FileReadException {
 		String filePath = Functions.pathToFile(Constant.ROUTES_DIR, configName, ".json");
 		file = new File(filePath);
 
