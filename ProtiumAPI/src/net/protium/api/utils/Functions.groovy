@@ -24,7 +24,10 @@ final class Functions {
 
         String result = builder.toString()
 
-        return result.substring(0, result.length() - glue.length())
+	    if (result.length() < glue.length()) {
+		    return result
+	    }
+	    result.substring(0, result.length() - glue.length())
     }
 
     static String[] listFiles(String folder, String extension) {

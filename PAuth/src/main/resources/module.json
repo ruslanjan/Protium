@@ -1,0 +1,4 @@
+{
+	"id": "PAuth",
+	"mainClass": "net.protium.modules.pauth.core.PAuth"
+}

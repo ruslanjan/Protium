@@ -7,8 +7,8 @@
 package net.protium.core.http
 
 import groovy.json.JsonException
-import net.protium.api.events.Response
 import net.protium.api.exceptions.NotFoundException
+import net.protium.api.http.Response
 import net.protium.api.utils.Constant
 import net.protium.api.utils.Functions
 import net.protium.api.utils.JSONParser

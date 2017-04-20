@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package net.protium.api.events;
+package net.protium.api.http;
 
 import java.util.Map;
 

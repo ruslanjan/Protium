@@ -1,13 +1,10 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
 
-package net.protium.core.http
-
-import net.protium.api.events.Response
-
+package net.protium.api.http
 /**
  * From: protium
  * Pkg: net.protium.core.http
@@ -16,9 +13,19 @@ import net.protium.api.events.Response
 class HTTPResponse implements Response {
 
     String contentType, response
+	Map<String, ?> headers = new HashMap<>()
     Integer status
 
-    @Override
+	@Override
+	Map<String, ?> getHeaders() {
+		return headers
+	}
+
+	void setHeaders(Map<String, ?> headers) {
+		this.headers = headers
+	}
+
+	@Override
     String getContentType() { contentType }
 
     void setContentType(String type) {

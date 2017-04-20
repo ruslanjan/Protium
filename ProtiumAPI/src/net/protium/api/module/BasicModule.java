@@ -6,11 +6,13 @@
 
 package net.protium.api.module;
 
-import net.protium.api.events.Request;
-import net.protium.api.events.Response;
+import net.protium.api.annotations.OnDisable;
+import net.protium.api.annotations.OnEnable;
+import net.protium.api.http.Request;
+import net.protium.api.http.Response;
 
 public abstract class BasicModule extends AbstractModule {
-	@Override
+	@OnEnable
 	public void onEnable( ) {
 	}
 
@@ -19,7 +21,7 @@ public abstract class BasicModule extends AbstractModule {
 		return null;
 	}
 
-	@Override
+	@OnDisable
 	public void onDisable( ) {
 	}
 }

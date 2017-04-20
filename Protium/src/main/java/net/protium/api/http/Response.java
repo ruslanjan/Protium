@@ -4,12 +4,19 @@
  * Proprietary and confidential
  */
 
-package net.protium.api.module;
+package net.protium.api.http;
 
-import net.protium.api.http.Request;
-import net.protium.api.http.Response;
+import java.util.Map;
 
-public interface IModule {
+public interface Response {
 
-	Response onRequest(Request request);
+	String getContentType( );
+
+	String getResponse( );
+
+	Integer getStatus( );
+
+	Map getHeaders( );
+
+
 }

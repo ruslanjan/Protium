@@ -117,7 +117,7 @@ public class Manager implements ModuleManager {
 			}
 			String moduleName = (String) config.get("id");
 			try {
-				AnnotationUtil.invokeMethodWithAnnotation(moduleName, OnEnable.class, new Class[]{ });
+				AnnotationUtil.invokeMethodWithAnnotation(newModule, OnEnable.class, new Object[]{ });
 			} catch (Exception e) {
 				logger.severe("Unhandled exception in module: " + moduleName);
 			}
@@ -131,7 +131,7 @@ public class Manager implements ModuleManager {
 	@Override
 	public void reloadModules( ) {
 		for (Map.Entry < String, IModule > entry : modules.entrySet()) {
-			AnnotationUtil.invokeMethodWithAnnotation(entry.getValue(), OnDisable.class, new Class[]{ });
+			AnnotationUtil.invokeMethodWithAnnotation(entry.getValue(), OnDisable.class, new Object[]{ });
 		}
 		moduleClassLoader = new ModuleClassLoader(ClassLoader.getSystemClassLoader(),
 			Functions.listFiles(Constant.MOD_DIR, ".jar"));
@@ -147,7 +147,7 @@ public class Manager implements ModuleManager {
 		}
 		if (getStatus(name)) {
 			try {
-				AnnotationUtil.invokeMethodWithAnnotation(modules.get(name), OnDisable.class, new Class[]{ });
+				AnnotationUtil.invokeMethodWithAnnotation(modules.get(name), OnDisable.class, new Object[]{ });
 			} catch (Exception e) {
 				logger.severe("Unhandled exception in module: " + name);
 			}
@@ -168,7 +168,7 @@ public class Manager implements ModuleManager {
 		}
 		if (!getStatus(name)) {
 			try {
-				AnnotationUtil.invokeMethodWithAnnotation(modules.get(name), OnEnable.class, new Class[]{ });
+				AnnotationUtil.invokeMethodWithAnnotation(modules.get(name), OnEnable.class, new Object[]{ });
 			} catch (Exception e) {
 				logger.severe("Unhandled exception in module: " + name);
 			}
@@ -266,7 +266,7 @@ public class Manager implements ModuleManager {
 	@Override
 	protected void finalize( ) throws Throwable {
 		for (Map.Entry < String, IModule > entry : modules.entrySet()) {
-			AnnotationUtil.invokeMethodWithAnnotation(entry.getValue(), OnDisable.class, new Class[]{ });
+			AnnotationUtil.invokeMethodWithAnnotation(entry.getValue(), OnDisable.class, new Object[]{ });
 		}
 		super.finalize();
 	}

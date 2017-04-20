@@ -11,22 +11,27 @@ From temporary-protium
 */
 
 import net.protium.modules.pauth.database.orm.User;
-import net.protium.modules.pauth.utils.C;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
+import javax.persistence.spi.PersistenceUnitInfo;
 import java.util.Map;
 
 public class UserManager {
 	public EntityManager entityManager;
 
-
+	public PersistenceUnitInfo persistenceUnitInfo = new PersistenceUnit();
 	public UserManager(Map props) {
-		entityManager = Persistence
-			.createEntityManagerFactory(C.DB_UNIT, props)
-			.createEntityManager();
+		EntityManagerFactory factory = new HibernatePersistenceProvider()
+			.createContainerEntityManagerFactory(
+				persistenceUnitInfo,
+				props
+			);
+
+		entityManager = factory.createEntityManager();
 
 		start();
 	}
@@ -90,6 +95,11 @@ public class UserManager {
 		User user = new User(login, email, password, firstName, middleName, lastName, googleBinding);
 		entityManager.persist(user);
 
+		return user;
+	}
+
+	public User newUser(User user) {
+		entityManager.persist(user);
 		return user;
 	}
 

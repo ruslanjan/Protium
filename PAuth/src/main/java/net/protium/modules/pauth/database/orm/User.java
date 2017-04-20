@@ -10,14 +10,17 @@ In net.protium.modules.pauth.database.orm
 From temporary-protium
 */
 
+import net.protium.modules.pauth.oauth2.OAuthType;
+
 import javax.persistence.*;
 
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "pauth_users")
 public class User {
 
-	//region Fields definition
+	//region DisplayType definition
 	@Id
 	@Column(name = "user_id", nullable = false, unique = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +32,7 @@ public class User {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@Column(name = "password", nullable = false)
+	@Column(name = "password")
 	private String password;
 
 	@Column(name = "first_name")
@@ -42,7 +45,10 @@ public class User {
 	private String lastName = "";
 
 	@Column(name = "oauth_bind")
-	private String googleBind;
+	private String oauthBind;
+
+	@Column(name = "oauth_type")
+	private OAuthType oauthType;
 	//endregion
 
 	public User(String login, String email, String password, String firstName, String middleName, String lastName, String googleBind) {
@@ -52,7 +58,7 @@ public class User {
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
-		this.googleBind = googleBind;
+		this.oauthBind = googleBind;
 	}
 
 	public User( ) {
@@ -115,12 +121,20 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getGoogleBind( ) {
-		return googleBind;
+	public String getOauthBind( ) {
+		return oauthBind;
 	}
 
-	public void setGoogleBind(String googleBind) {
-		this.googleBind = googleBind;
+	public void setOauthBind(String googleBind) {
+		this.oauthBind = googleBind;
+	}
+
+	public OAuthType getOauthType( ) {
+		return oauthType;
+	}
+
+	public void setOauthType(OAuthType oauthType) {
+		this.oauthType = oauthType;
 	}
 
 	//endregion

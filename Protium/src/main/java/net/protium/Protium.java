@@ -9,9 +9,9 @@ package net.protium;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.protium.api.agents.Config;
-import net.protium.api.events.Response;
 import net.protium.api.exceptions.FileReadException;
 import net.protium.api.exceptions.NotFoundException;
+import net.protium.api.http.Response;
 import net.protium.api.utils.Constant;
 import net.protium.api.utils.Functions;
 import net.protium.core.console.BasicCommandList;
@@ -88,6 +88,8 @@ public class Protium extends AbstractHandler {
 
 		try {
 			JarFile jarFile = new JarFile(new File(Protium.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()));
+
+			System.out.println(Protium.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
 
 			Enumeration < JarEntry > entries = jarFile.entries();
 
@@ -382,6 +384,18 @@ public class Protium extends AbstractHandler {
 		response.setContentType(responseData.getContentType());
 		response.getWriter().print(responseData.getResponse());
 		response.setContentLength(responseData.getResponse().length());
+
+		responseData.getHeaders().forEach((key, value) -> {
+
+			if ((value instanceof Integer)) {
+				response.setIntHeader((String) key, (Integer) value);
+			} else if ((value instanceof Long)) {
+				response.setDateHeader((String) key, (Long) value);
+			} else {
+				response.setHeader((String) key, (String) value);
+			}
+
+		});
 
 		baseRequest.setHandled(true);
 	}

@@ -1,12 +1,12 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
 
 package net.protium.core.http
 
-import net.protium.api.events.Request
+import net.protium.api.http.Request
 
 /**
  * From: protium

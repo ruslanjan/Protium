@@ -4,14 +4,14 @@
  * Proprietary and confidential
  */
 
-package net.protium.api.events;
+package net.protium.modules.pauth.oauth2;
+/*
+In net.protium.modules.pauth.oauth2
+From temporary-protium
+*/
 
-public interface Response {
+import java.io.Serializable;
 
-	String getContentType( );
-
-	String getResponse( );
-
-	Integer getStatus( );
-
+public enum OAuthType implements Serializable {
+	VK, NONE
 }
