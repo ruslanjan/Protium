@@ -27,7 +27,9 @@ class Constant {
     public static String LOG_EXT = ".log.xml"
     public static String SCHEMA_EXT = ".schema.json"
 
-    public static String SERVER_TEXT = "\n" +
+	public static OutputStream UI_STREAM = null
+
+	public static String SERVER_TEXT = "\n" +
             "<b>Software</b>: Protium\n" +
             "<b>OS</b>: ${System.getProperty('os.name')} ${System.getProperty('os.version')} ${System.getProperty('os.arch')} \n" +
             "<b>JVM</b>: ${System.getProperty('java.vm.name')} ${System.getProperty('java.version')}/${System.getProperty('java.vm.version')} by ${System.getProperty('java.vendor')}\n" +

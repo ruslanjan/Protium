@@ -14,6 +14,7 @@ import net.protium.api.utils.Functions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Set;
 
 public class RouteConfig extends Config {
 
@@ -36,8 +37,10 @@ public class RouteConfig extends Config {
 		if (data == null)
 			throw new FileReadException();
 
-		if (schema != null && !validate(schema)) {
-			throw new JsonException();
+		Set valid = validate(schema);
+
+		if (schema != null && valid.size() > 0) {
+			throw new JsonException(valid.toString());
 		}
 	}
 }

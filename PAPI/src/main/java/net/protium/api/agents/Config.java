@@ -15,7 +15,8 @@ import net.protium.api.utils.Functions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
+import java.nio.file.Files;
+import java.util.Set;
 
 public class Config extends AbstractJSONParser {
 
@@ -23,20 +24,25 @@ public class Config extends AbstractJSONParser {
 		this(configName, null);
 	}
 
-	public Config(String configName, String schema) throws IOException, FileReadException {
+	public Config(String configName, String schema) throws IOException, FileReadException, JsonException {
 		init(configName, schema);
 	}
 
 	public static boolean createConfig(String configName) throws IOException {
+		return createConfig(configName, "null");
+	}
+
+	public static boolean createConfig(String configName, String initJSON) throws IOException {
 		String filePath = Functions.createFile(Constant.CONF_DIR, configName, Constant.CONF_EXT);
 
 		File file = new File(filePath);
 
-		boolean success = file.exists() || ((file.getParentFile().mkdirs() || file.getParentFile().exists()) && file.createNewFile());
+		if (file.exists())
+			return true;
 
-		URL url = new URL(file.getAbsolutePath());
+		boolean success = ((file.getParentFile().mkdirs() || file.getParentFile().exists()) && file.createNewFile());
 
-		url.openConnection().getOutputStream().write("null".getBytes());
+		Files.write(file.toPath(), initJSON.getBytes());
 
 		return success;
 	}
@@ -48,6 +54,7 @@ public class Config extends AbstractJSONParser {
 	}
 
 	protected void init(String configName, String schema) throws FileReadException, FileNotFoundException, JsonException {
+
 		String filePath = Functions.pathToFile(Constant.CONF_DIR, configName, Constant.CONF_EXT);
 
 		file = new File(filePath);
@@ -57,8 +64,10 @@ public class Config extends AbstractJSONParser {
 		if (data == null)
 			throw new FileReadException();
 
-		if (schema != null && !validate(schema)) {
-			throw new JsonException();
+		Set valid = validate(schema);
+
+		if (schema != null && valid.size() > 0) {
+			throw new JsonException(valid.toString());
 		}
 	}
 

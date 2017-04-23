@@ -90,4 +90,10 @@ final class Functions {
         (a < b ? a : b)
     }
 
+	@Deprecated
+	static void debug(s) {
+		println "========================="
+		println s
+		println "========================="
+	}
 }

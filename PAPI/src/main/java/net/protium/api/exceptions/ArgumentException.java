@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -10,15 +10,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Logger;
 
-/**
- * From: protium
- * Pkg: net.protium.net.protium.api.exceptions
- * At: 11.04.17
- */
-public class ConfigException extends Exception {
-	private static final Logger logger = Logger.getLogger("FileReadException");
+public class ArgumentException extends Exception {
+	private static final Logger logger = Logger.getLogger("ArgumentException");
 
-	public ConfigException( ) {
+	public ArgumentException( ) {
 		StringWriter trace = new StringWriter();
 		printStackTrace(new PrintWriter(trace));
 		logger.severe(trace.toString());

@@ -6,10 +6,13 @@
 
 package net.protium.api.http;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 public interface Request {
 	String getMethod( );
+
+	HttpSession getSession( );
 
 	String getRawData( );
 

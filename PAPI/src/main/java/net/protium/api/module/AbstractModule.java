@@ -12,7 +12,15 @@ import net.protium.api.http.Response;
 
 public abstract class AbstractModule implements IModule {
 
-	public static ModuleManager moduleManager = null;
+	static ModuleManager moduleManager = null;
+
+	public static ModuleManager getModuleManager( ) {
+		return moduleManager;
+	}
+
+	public static void setModuleManager(ModuleManager moduleManager) {
+		AbstractModule.moduleManager = moduleManager;
+	}
 
 	@Override
 	public abstract Response onRequest(Request request);
