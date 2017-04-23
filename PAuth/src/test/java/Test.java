@@ -9,8 +9,13 @@ In PACKAGE_NAME
 From temporary-protium
 */
 
+import net.protium.modules.pauth.database.UserManager;
+
 public class Test {
 
 	public static void main(String[] argv) {
+		UserManager userManager = new UserManager();
+		String session = userManager.newSession(1);
+		System.out.println(session);
 	}
 }

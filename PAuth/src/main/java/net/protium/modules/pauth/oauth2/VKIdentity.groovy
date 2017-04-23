@@ -41,7 +41,7 @@ class VKIdentity {
 		options.put("state", comment)
 
 		options.entrySet().forEach { entry ->
-			url.append(entry.getKey() + "=" + entry.getValue() + "&")
+			url.append(entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), "UTF-8") + "&")
 		}
 
 		return url.toString()

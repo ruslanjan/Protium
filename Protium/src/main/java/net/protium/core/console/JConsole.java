@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -7,6 +7,8 @@
 package net.protium.core.console;
 
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,15 +17,17 @@ import java.util.Scanner;
 
 public class JConsole implements Runnable {
 
-	private static final String PROMPT = " ~ $ ";
-	private static final String HEADER = "Protium/Console\n";
+	private static final String HEADER = "Protium/JConsole\nhttps://bitbucket.org/kkremen/jconsole\n";
+	private static String PROMPT = " ~ $ ";
+	private static InputStream READER = System.in;
+	private static PrintStream WRITER = System.out;
 	protected final ArrayList < Command > commandHistory = new ArrayList <>();
 	private final Scanner scanner;
 	private CommandList commandList = null;
 
 	public JConsole(CommandList list) {
 		commandList = list;
-		scanner = new Scanner(System.in);
+		scanner = new Scanner(READER);
 	}
 
 	private Command parse(String rawCommand) {
@@ -49,8 +53,8 @@ public class JConsole implements Runnable {
 	}
 
 	protected void prompt( ) {
-		System.err.println();
-		System.err.print(PROMPT);
+		WRITER.println();
+		WRITER.print(PROMPT);
 
 		Command command = parse(getInputLine());
 
@@ -60,12 +64,13 @@ public class JConsole implements Runnable {
 		try {
 			result = execute(command);
 		} catch (InvocationTargetException | IllegalAccessException e) {
-			System.err.println("Can not execute command '" + command.getName() + "'!\n\tReason: " + e.getMessage());
+			WRITER.println("Can not execute command '" + command.getName() + "'!\n\tReason: " + e.toString());
+			e.printStackTrace();
 			return;
 		}
 
 		if (result != null)
-			System.err.println(result.toString());
+			WRITER.println(result.toString());
 	}
 
 	protected String getInputLine( ) {
@@ -73,7 +78,7 @@ public class JConsole implements Runnable {
 	}
 
 	public void run( ) {
-		System.err.println(HEADER);
+		WRITER.println(HEADER);
 
 		//noinspection InfiniteLoopStatement
 		while (true) {

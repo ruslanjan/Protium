@@ -90,8 +90,6 @@ class ModuleClassLoader extends ClassLoader {
 				}
 			}
 		}
-
-
 		return null;
 	}
 

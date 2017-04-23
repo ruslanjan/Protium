@@ -1,4 +1,11 @@
 {
-	"id": "PAuth",
-	"mainClass": "net.protium.modules.pauth.core.PAuth"
+	"id": "PAuthBackend",
+	"name": "PAuthBackend - Part of PAuth",
+	"version": "v0.0.2/test",
+	"author": "Protium Team - Ussoltsev",
+	"description": [
+		"PAuth",
+		"Default auth system from Protium developers."
+	],
+	"mainClass": "net.protium.modules.pauth.core.PAuthBackend"
 }

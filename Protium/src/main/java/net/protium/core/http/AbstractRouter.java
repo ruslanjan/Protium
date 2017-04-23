@@ -9,6 +9,7 @@ package net.protium.core.http;
 import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.http.Request;
 import net.protium.api.http.Response;
+import net.protium.api.module.IModule;
 import net.protium.core.modules.management.Manager;
 
 abstract public class AbstractRouter {
@@ -16,7 +17,13 @@ abstract public class AbstractRouter {
 	protected Manager manager;
 
 	protected Response _perform(String moduleName, Request request) throws NotFoundException {
-		return manager.getModule(moduleName).onRequest(request);
+
+		IModule module = manager.getModule(moduleName);
+
+		if (module == null)
+			throw new NotFoundException();
+
+		return module.onRequest(request);
 	}
 
 }

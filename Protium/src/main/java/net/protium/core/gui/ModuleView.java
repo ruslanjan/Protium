@@ -27,7 +27,10 @@ class ModuleView {
 		if (logger == null) {
 			logger = Logger.getLogger(ModuleView.class.getName());
 			try {
-				logger.addHandler(new FileHandler(Constant.LOG_DIR + getClass() + Constant.LOG_EXT));
+				logger.addHandler(
+					new FileHandler(
+						Functions.createFile(Constant.LOG_DIR, ModuleView.class.getSimpleName(), Constant.LOG_EXT)
+					));
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, "Failed to create FileHandler", e);
 			}
@@ -46,6 +49,7 @@ class ModuleView {
 
 	public String getName( ) {
 		JSONParser config = Protium.manager.getModuleConfig(name.getValue());
+
 		if (config == null) {
 			return "null";
 		}

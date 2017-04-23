@@ -6,6 +6,7 @@
 
 package net.protium;
 
+import groovy.json.JsonException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.protium.api.agents.Config;
@@ -15,13 +16,13 @@ import net.protium.api.http.Response;
 import net.protium.api.utils.Constant;
 import net.protium.api.utils.Functions;
 import net.protium.core.console.BasicCommandList;
-import net.protium.core.console.BasicExecutable;
 import net.protium.core.console.JConsole;
 import net.protium.core.gui.GUIThread;
 import net.protium.core.http.HTTPRequest;
 import net.protium.core.http.HTTPRequestParser;
 import net.protium.core.http.Router;
 import net.protium.core.modules.management.Manager;
+import net.protium.core.util.Reloader;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -33,6 +34,7 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -51,8 +53,6 @@ public class Protium extends AbstractHandler {
 
 	private static final Logger logger = Logger.getLogger(Protium.class.getName());
 	public static Manager manager;
-	private static long ROUTER_RELOAD_TIMEOUT = 10 * 1000; // 10 seconds default.
-	private static long MODMGR_RELOAD_TIMEOUT = 0; // Disabled by default.
 	private static long routerLastReload;
 	private static long modmgrLastReload;
 	private static String profilePath;
@@ -61,7 +61,7 @@ public class Protium extends AbstractHandler {
 
 	private static void initialize( ) {
 
-		/* Create necessary dirs */
+		//region Create necessary dirs
 		String[] paths = { Constant.CONF_DIR, Constant.DATA_DIR, Constant.LOG_DIR, Constant.MOD_DIR, Constant.RES_DIR, Constant.ROUTES_DIR, Constant.SCHEMA_DIR };
 
 		for (String path : paths)
@@ -73,19 +73,20 @@ public class Protium extends AbstractHandler {
 					System.exit(-4);
 				}
 			}
+		//endregion
 
-		/* Initialize logger */
+		//region Initialize logger
 		try {
 			logger.addHandler(
 				(new FileHandler(
-					Functions.createFile(Constant.LOG_DIR, Protium.class.getName(), Constant.LOG_EXT)
+					Functions.createFile(Constant.LOG_DIR, Protium.class.getSimpleName(), Constant.LOG_EXT)
 				)));
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to initalize logger.", e);
 		}
+		//endregion
 
-		/* Unpack JSON Schemas */
-
+		//region Unpack JSON Schemas
 		try {
 			JarFile jarFile = new JarFile(new File(Protium.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()));
 
@@ -114,11 +115,12 @@ public class Protium extends AbstractHandler {
 		} catch (IOException | URISyntaxException e) {
 			logger.log(Level.SEVERE, "Failed to copy JSON schemas from JAR! Please, download and install them manually.", e);
 		}
+		//endregion
 
-		/* Read configs */
+		//region Read configs
 		try {
 			conf = new Config("server", "server");
-		} catch (IOException | FileReadException e) {
+		} catch (IOException | FileReadException | JsonException e) {
 			logger.log(Level.OFF, "Failed to read 'server' config.", e);
 			System.exit(-3);
 		}
@@ -127,26 +129,39 @@ public class Protium extends AbstractHandler {
 
 		profilePath = Config.toPath(new String[]{ "profiles", profile });
 
-		if (!conf.checkPath(
-			profilePath
-		)) {
-			logger.severe("ERROR: couldn't read server profile 'server'/" + profilePath);
-		}
-
-		ROUTER_RELOAD_TIMEOUT = conf.checkPath(
+		Reloader.ROUTER_RELOAD_INTERVAL = conf.checkPath(
 			Config.toPath(new String[]{ profilePath, "router.reloadInterval" })
 		) ? conf.getInteger(
 			Config.toPath(new String[]{ profilePath, "router.reloadInterval" })
-		) : ROUTER_RELOAD_TIMEOUT;
+		) : Reloader.ROUTER_RELOAD_INTERVAL;
 
-		MODMGR_RELOAD_TIMEOUT = conf.checkPath(
+		Reloader.MANAGER_RELOAD_INTERVAL = conf.checkPath(
 			Config.toPath(new String[]{ profilePath, "moduleManager.reloadInterval" })
 		) ? conf.getInteger(
 			Config.toPath(new String[]{ profilePath, "moduleManager.reloadInterval" })
-		) : MODMGR_RELOAD_TIMEOUT;
+		) : Reloader.MANAGER_RELOAD_INTERVAL;
+		// endregion
 
+		//region Initialize core agents
 		manager = new Manager();
+		manager.enableAll();
 		router = new Router(manager);
+		//endregion
+
+		//region Start Reloader
+		Reloader reloader = new Reloader(router, manager);
+		(new Thread(reloader)).start();
+		//endregion
+
+		//region Start UI agents
+		runGUI();
+
+		try {
+			runConsole();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		//endregion
 	}
 
 	private static void _main( ) {
@@ -203,7 +218,7 @@ public class Protium extends AbstractHandler {
 	}
 
 	public static void main(String[] args) {
-
+		//region Parse command-line options
 		OptionParser parser = new OptionParser();
 
 		parser
@@ -236,38 +251,81 @@ public class Protium extends AbstractHandler {
 		} else if (options.has("h")) {
 			changeWorkingDir((String) options.valueOf("h"));
 		}
+		//endregion
 
 		initialize();
-
 		_main();
-
-		runGUI();
-
-		try {
-			runConsole();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		//modmgrLastReload = routerLastReload = System.currentTimeMillis();
 	}
 
 	private static void runConsole( ) throws NoSuchMethodException {
+
+
 		BasicCommandList commandList = new BasicCommandList();
+
+		commandList.register("modctl", (Object[] args) -> {
+
+			if (args.length < 1)
+				return "modctl: missing operation!";
+
+			switch ((String) args[0]) {
+				case "reload":
+					manager.reloadModules();
+					return "Success!";
+			}
+
+			if (args.length < 2)
+				return "modctl: missing module name!";
+
+			switch ((String) args[0]) {
+				case "status":
+					return "Module status: " + manager.getExtendedStatus((String) args[1]);
+				case "enable":
+					try {
+						manager.enableModule((String) args[1]);
+						return "modctl: success";
+					} catch (NotFoundException e) {
+						return "modctl: fail\n\tModuleManager: " + e.getMessage();
+					}
+				case "disable":
+					try {
+						manager.disableModule((String) args[1]);
+						return "modctl: success";
+					} catch (NotFoundException e) {
+						return "modctl: fail\n\tModuleManager: " + e.getMessage();
+					}
+				default:
+					return "modctl: cannot find command!";
+			}
+		});
+
+		commandList.register("clear", (args) -> {
+			if (System.getProperty("os.name").toLowerCase().contains("win")) {
+				try {
+					Runtime.getRuntime().exec("cmd /c cls");
+				} catch (IOException ignored) {
+				}
+			} else {
+				System.out.print("\\033[H\\033[2J");
+			}
+
+			System.out.flush();
+			return "";
+		});
+
+		commandList.register("control", (args) -> {
+			Protium.runGUI();
+			return null;
+		});
+
+		commandList.register("exit", (args) -> {
+			System.exit(0);
+			return "";
+		});
+
 		JConsole console = new JConsole(commandList);
-		commandList.register("reloadModules",
-			new BasicExecutable(manager.getClass().getMethod("reloadModules"), manager));
-		commandList.register("enableModule",
-			new BasicExecutable(manager.getClass().getMethod("enableModule", String.class), manager));
-		commandList.register("disableModule",
-			new BasicExecutable(manager.getClass().getMethod("disableModule", String.class), manager));
-		commandList.register("getStat",
-			new BasicExecutable(manager.getClass().getMethod("getStatus", String.class), manager));
-		commandList.register("getStatus",
-			new BasicExecutable(manager.getClass().getMethod("getExtendedStatus", String.class), manager));
-		console.run();
+		(new Thread(console)).start();
 	}
 
-	//Run this to open GUI
 	public static void runGUI( ) {
 		Thread guiThread = new Thread(new GUIThread());
 		guiThread.start();
@@ -295,29 +353,11 @@ public class Protium extends AbstractHandler {
 		return errorPage;
 	}
 
-	private static void reloadIfNeeded( ) {
-		long currentTime = System.currentTimeMillis();
-
-		if (currentTime - routerLastReload > ROUTER_RELOAD_TIMEOUT && ROUTER_RELOAD_TIMEOUT > 0) {
-			routerLastReload = currentTime;
-			logger.info("Reloading Router");
-			router.reload();
-		}
-
-		currentTime = System.currentTimeMillis();
-
-		if (currentTime - modmgrLastReload > MODMGR_RELOAD_TIMEOUT && MODMGR_RELOAD_TIMEOUT > 0) {
-			modmgrLastReload = currentTime;
-			logger.info("Reloading ModuleManager");
-			manager.reloadModules();
-		}
-
-	}
-
 	private static void changeWorkingDir(String dir) {
 		File file = new File(dir);
 		Constant.HOME_DIR = file.getAbsolutePath();
 
+		//region CWD
 		Constant.RES_DIR = Functions.implode(
 			new String[]{ Constant.HOME_DIR, Constant.RES_DIR }, File.separator);
 		Constant.CONF_DIR = Functions.implode(
@@ -330,7 +370,7 @@ public class Protium extends AbstractHandler {
 			new String[]{ Constant.HOME_DIR, Constant.DATA_DIR }, File.separator);
 		Constant.MOD_DIR = Functions.implode(
 			new String[]{ Constant.HOME_DIR, Constant.MOD_DIR }, File.separator);
-
+		//endregion
 	}
 
 	@Override
@@ -340,16 +380,20 @@ public class Protium extends AbstractHandler {
 	                   HttpServletResponse response)
 		throws IOException, ServletException {
 
-		reloadIfNeeded();
+		System.out.println("GOTTA " + target);
 
 		HTTPRequestParser parser = new HTTPRequestParser(request);
 
 		HTTPRequest requestData = parser.getHTTPRequest();
 
+		HttpSession session = request.getSession();
+
 		requestData.setURL(target);
+		requestData.setSession(session);
 
 		Response responseData;
 
+		//region Perform request processor
 		try {
 			responseData = router.perform(requestData);
 		} catch (NotFoundException e) {
@@ -363,7 +407,9 @@ public class Protium extends AbstractHandler {
 			baseRequest.setHandled(true);
 			return;
 		}
+		//endregion
 
+		//region Show error page if needed
 		if (
 			(responseData.getResponse() == null || responseData.getResponse().length() < 1)
 				&& (responseData.getStatus() / 100) > 3 // All status codes that >= 400 are error codes
@@ -379,7 +425,9 @@ public class Protium extends AbstractHandler {
 			baseRequest.setHandled(true);
 			return;
 		}
+		//endregion
 
+		//region Set response fields
 		response.setStatus(responseData.getStatus());
 		response.setContentType(responseData.getContentType());
 		response.getWriter().print(responseData.getResponse());
@@ -396,6 +444,7 @@ public class Protium extends AbstractHandler {
 			}
 
 		});
+		//endregion
 
 		baseRequest.setHandled(true);
 	}

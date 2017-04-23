@@ -128,7 +128,7 @@ such Contributions.
 
 #### 6. Trademarks
 
-This License does not grant permission to use the trade names, trademarks,
+This License does not grant rank to use the trade names, trademarks,
 service marks, or product names of the Licensor, except as required for
 reasonable and customary use in describing the origin of the Work and
 reproducing the content of the NOTICE file.

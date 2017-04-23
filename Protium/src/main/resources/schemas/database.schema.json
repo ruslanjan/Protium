@@ -1,0 +1,36 @@
+{
+	"title": "Proitum Database profile list",
+	"type": "object",
+	"properties": {
+		"profile": {
+			"type": "string"
+		},
+		"profiles": {
+			"type": "object",
+			"patternProperties": {
+				"[\\s\\S]+": {
+					"type": "object",
+					"properties": {
+						"uri": {
+							"type": "string"
+						},
+						"user": {
+							"type": "string"
+						},
+						"password": {
+							"type": "string"
+						},
+						"driver": {
+							"type": "string"
+						},
+						"dialect": {
+							"type": "string"
+						}
+					},
+					"required": [ "url", "user", "password", "driver", "dialect" ]
+				}
+			}
+		}
+	},
+	"required": [ "profiles" ]
+}

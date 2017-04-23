@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Protium - All Rights Reserved
+ * Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
@@ -14,7 +14,9 @@ import javafx.scene.control.*;
 import net.protium.Protium;
 import net.protium.api.exceptions.NotFoundException;
 import net.protium.api.utils.Constant;
+import net.protium.api.utils.Functions;
 import net.protium.api.utils.Pair;
+import net.protium.core.util.ErrCLI;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -48,6 +50,8 @@ public final class MenuController {
 	private Button disableButton;
 	@FXML
 	private Button reloadModuleButton;
+	@FXML
+	private TextArea textArea;
 
 	private ModuleView curModule;
 
@@ -60,9 +64,15 @@ public final class MenuController {
 	@FXML
 	private void initialize( ) {
 		if (logger == null) {
-			logger = Logger.getLogger(ModuleView.class.getName());
+			logger = Logger.getLogger(this.getClass().getName());
+
+			Constant.UI_STREAM = new ErrCLI(textArea);
+
 			try {
-				logger.addHandler(new FileHandler(Constant.LOG_DIR + getClass() + Constant.LOG_EXT));
+				logger.addHandler(
+					new FileHandler(
+						Functions.createFile(Constant.LOG_DIR, this.getClass().getSimpleName(), Constant.LOG_EXT)
+					));
 			} catch (IOException e) {
 				logger.log(Level.SEVERE, "Failed to create FileHandler", e);
 			}

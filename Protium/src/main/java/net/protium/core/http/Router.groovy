@@ -36,7 +36,7 @@ class Router extends AbstractRouter {
 
         try {
             logger.addHandler((new FileHandler(
-                    Functions.createFile(Constant.LOG_DIR, this.getClass().getName(), Constant.LOG_EXT))))
+		            Functions.createFile(Constant.LOG_DIR, this.getClass().getSimpleName(), Constant.LOG_EXT))))
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to write logs", e)
         }

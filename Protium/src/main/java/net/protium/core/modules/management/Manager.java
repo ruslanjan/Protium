@@ -46,7 +46,7 @@ public class Manager implements ModuleManager {
 	public Manager( ) {
 		try {
 			logger.addHandler((new FileHandler(
-				Functions.createFile(Constant.LOG_DIR, this.getClass().getName(), Constant.LOG_EXT))));
+				Functions.createFile(Constant.LOG_DIR, this.getClass().getSimpleName(), Constant.LOG_EXT))));
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to write logs", e);
 		}
@@ -58,7 +58,8 @@ public class Manager implements ModuleManager {
 		status = new HashMap <>();
 		modulesURLMap = new HashMap <>();
 
-		AbstractModule.moduleManager = this;
+		AbstractModule.setModuleManager(this);
+
 		loadAll();
 	}
 
@@ -109,6 +110,7 @@ public class Manager implements ModuleManager {
 			}
 			IModule newModule;
 			try {
+				System.out.println(c);
 				newModule = ((IModule) c.newInstance());
 			} catch (InstantiationException | IllegalAccessException e) {
 				logger.log(Level.SEVERE, "FAILED: Can not create an instance of " + c.getName(), e);
@@ -116,16 +118,23 @@ public class Manager implements ModuleManager {
 				continue;
 			}
 			String moduleName = (String) config.get("id");
-			try {
-				AnnotationUtil.invokeMethodWithAnnotation(newModule, OnEnable.class, new Object[]{ });
-			} catch (Exception e) {
-				logger.severe("Unhandled exception in module: " + moduleName);
-			}
+
 			modules.put(moduleName, newModule);
-			moduleStatus.put(moduleName, true);
-			status.put(statusName, "on");
+			moduleStatus.put(moduleName, false);
+			status.put(statusName, "off");
 			modulesURLMap.put(moduleName, ("jar:file:" + path + "!/"));
 		}
+	}
+
+	public void enableAll( ) {
+		modules.forEach((name, module) -> {
+				try {
+					enableModule(name);
+				} catch (NotFoundException e) {
+					logger.log(Level.WARNING, "trying to reload nonexistent module!", e);
+				}
+			}
+		);
 	}
 
 	@Override
@@ -135,7 +144,10 @@ public class Manager implements ModuleManager {
 		}
 		moduleClassLoader = new ModuleClassLoader(ClassLoader.getSystemClassLoader(),
 			Functions.listFiles(Constant.MOD_DIR, ".jar"));
+
 		loadAll();
+		enableAll();
+
 		MainApp.controller.reloadModuleList();
 	}
 
@@ -173,7 +185,8 @@ public class Manager implements ModuleManager {
 				logger.severe("Unhandled exception in module: " + name);
 			}
 			moduleStatus.put(name, true);
-			MainApp.controller.setModuleViewStatus(name, "on");
+			if (MainApp.controller != null)
+				MainApp.controller.setModuleViewStatus(name, "on");
 			status.put(name, "on");
 			logger.info("IModule '" + name + "' is enabled");
 		} else {
