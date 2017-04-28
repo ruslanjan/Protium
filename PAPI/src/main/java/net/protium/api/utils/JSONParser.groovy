@@ -22,24 +22,28 @@ class JSONParser extends AbstractJSONParser {
     JSONParser(File file, String schema = null) throws JsonException {
         this.file = file
         data = openFile(file)
-        if (schema != null && !validate(schema)) {
-            throw new JsonException()
-        }
+	    Set valid = validate(schema)
+	    if (schema != null && valid.size() > 0) {
+		    throw new JsonException(valid.toString())
+	    }
+
     }
 
     JSONParser(InputStream stream, String schema = null) throws JsonException {
         file = null
         data = openStream(stream)
-        if (schema != null && !validate(schema)) {
-            throw new JsonException()
+	    Set valid = validate(schema)
+	    if (schema != null && valid.size() > 0) {
+		    throw new JsonException(valid.toString())
         }
     }
 
     JSONParser(String string, String schema = null) throws JsonException {
         file = null
         data = openString(string)
-        if (schema != null && !validate(schema)) {
-            throw new JsonException()
-        }
+	    Set valid = validate(schema)
+	    if (schema != null && valid.size() > 0) {
+		    throw new JsonException(valid.toString())
+	    }
     }
 }

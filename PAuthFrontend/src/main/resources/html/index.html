@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body ng-app="PAuth" ng-cloak ng-controller="PAuthController">
+
+<md-button class="md-raised" ng-click="showAuthDialog()">BUTTON</md-button>
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+
+<script src="?static(js/AuthDialogController.js)"></script>
+<script src="?static(js/RegisterDialogController.js)"></script>
+<script src="?static(js/PAuthController.js)"></script>
+
+<script type="text/javascript">
+	angular
+		.module('PAuth', ['ngMaterial'])
+		.controller('PAuthController', PAuthController);
+</script>
+
+</body>
+</html>

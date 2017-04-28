@@ -1,11 +1,14 @@
 {
 	"id": "PAuthBackend",
-	"name": "PAuthBackend - Part of PAuth",
-	"version": "v0.0.2/test",
+	"neme": "PAuthBackend - Part of PAuth",
+	"version": "v0.1/alpha",
 	"author": "Protium Team - Ussoltsev",
 	"description": [
 		"PAuth",
-		"Default auth system from Protium developers."
+		"Default auth system from Protium developers.",
+		"=========",
+		"PAuth Backend - JSON API for PAuth.",
+		"You can use it with official frontends or write your own."
 	],
-	"mainClass": "net.protium.modules.pauth.core.PAuthBackend"
+	"mainClass": "net.protium.modules.pauth.backend.core.PAuthBackend"
 }

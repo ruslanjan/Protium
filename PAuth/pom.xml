@@ -12,7 +12,7 @@
 
     <groupId>net.proitum.modules</groupId>
     <artifactId>PAuth</artifactId>
-    <version>0.0-SNAPSHOT</version>
+    <version>0.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

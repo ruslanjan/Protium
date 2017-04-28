@@ -88,7 +88,7 @@ public class Manager implements ModuleManager {
 				status.put(statusName, "ERR");
 				continue;
 			} catch (JsonException e) {
-				logger.log(Level.SEVERE, "Invalid schema in module.json in jar: " + path, e);
+				logger.log(Level.SEVERE, "Invalid schema in module.json in jar: " + path + "\nErrors: " + e.getMessage(), e);
 				status.put(statusName, "ERR");
 				continue;
 			}
@@ -110,10 +110,11 @@ public class Manager implements ModuleManager {
 			}
 			IModule newModule;
 			try {
+				System.out.println(mainClassPath);
 				System.out.println(c);
 				newModule = ((IModule) c.newInstance());
-			} catch (InstantiationException | IllegalAccessException e) {
-				logger.log(Level.SEVERE, "FAILED: Can not create an instance of " + c.getName(), e);
+			} catch (InstantiationException | IllegalAccessException | NullPointerException e) {
+				logger.log(Level.SEVERE, "Load IModule FAILED: Can not create an instance of " + (c != null ? c.getName() : "null"), e);
 				status.put(statusName, "ERR");
 				continue;
 			}
@@ -131,7 +132,7 @@ public class Manager implements ModuleManager {
 				try {
 					enableModule(name);
 				} catch (NotFoundException e) {
-					logger.log(Level.WARNING, "trying to reload nonexistent module!", e);
+					logger.log(Level.WARNING, "trying to load nonexistent module!", e);
 				}
 			}
 		);

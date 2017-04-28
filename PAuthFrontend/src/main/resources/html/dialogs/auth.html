@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<!--suppress ALL -->
+<md-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Authorize</h2>
+			<span flex></span>
+			<md-button ng-click="close()" class="md-icon-button">
+				<md-icon class="material-icons md-18">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	<form ng-cloak name="user">
+		<md-dialog-content>
+			<div class="md-dialog-content">
+				<div layout="column">
+					<md-input-container flex>
+						<label for="user.login">Username or email</label>
+						<md-icon class="material-icons md-18">person</md-icon>
+						<input ng-model="user.login" id="user.login">
+					</md-input-container>
+					<md-input-container flex>
+						<label for="user.password">Password</label>
+						<md-icon class="material-icons md-18">lock</md-icon>
+						<input ng-model="user.password" type="password" id="user.password">
+					</md-input-container>
+				</div>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions>
+			<md-button class="secondary" ng-click="reset()">Reset</md-button>
+			<md-button class="md-primary" ng-click="commit()">Confirm</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

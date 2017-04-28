@@ -42,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.FileHandler;
@@ -90,8 +91,6 @@ public class Protium extends AbstractHandler {
 		try {
 			JarFile jarFile = new JarFile(new File(Protium.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()));
 
-			System.out.println(Protium.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-
 			Enumeration < JarEntry > entries = jarFile.entries();
 
 			for (JarEntry jarEntry = entries.nextElement(); entries.hasMoreElements(); jarEntry = entries.nextElement()) {
@@ -121,7 +120,7 @@ public class Protium extends AbstractHandler {
 		try {
 			conf = new Config("server", "server");
 		} catch (IOException | FileReadException | JsonException e) {
-			logger.log(Level.OFF, "Failed to read 'server' config.", e);
+			logger.log(Level.SEVERE, "Failed to read 'server' config.", e);
 			System.exit(-3);
 		}
 
@@ -204,15 +203,16 @@ public class Protium extends AbstractHandler {
 
 		ContextHandler context = new ContextHandler("/");
 		context.setHandler(sessionHandler);
+		context.setInitParameter("org.eclipse.jetty.servlets.CrossOriginFilter", "/*");
 
 		server.setHandler(context);
 		server.setSessionIdManager(sessionIdManager);
 
 		try {
 			server.start();
-			//server.join();
+			server.join();
 		} catch (Exception e) {
-			logger.log(Level.OFF, "Jetty failed to start! Halted.", e);
+			logger.log(Level.SEVERE, "Jetty failed to start! Halted.", e);
 			System.exit(-2);
 		}
 	}
@@ -380,8 +380,6 @@ public class Protium extends AbstractHandler {
 	                   HttpServletResponse response)
 		throws IOException, ServletException {
 
-		System.out.println("GOTTA " + target);
-
 		HTTPRequestParser parser = new HTTPRequestParser(request);
 
 		HTTPRequest requestData = parser.getHTTPRequest();
@@ -397,7 +395,7 @@ public class Protium extends AbstractHandler {
 		try {
 			responseData = router.perform(requestData);
 		} catch (NotFoundException e) {
-			logger.log(Level.WARNING, "404 Not Found: target " + target, e);
+			logger.log(Level.WARNING, "404 Not Found: target " + target);
 
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			response.setContentType(Constant.HTML_CONTENT_TYPE);
@@ -433,18 +431,46 @@ public class Protium extends AbstractHandler {
 		response.getWriter().print(responseData.getResponse());
 		response.setContentLength(responseData.getResponse().length());
 
-		responseData.getHeaders().forEach((key, value) -> {
+		Map headers = responseData.getHeaders();
+
+		if (conf.checkPath(Config.toPath(
+			new String[]{ profilePath, "http.customHeaders" })
+		)) {
+			headers.putAll(
+				conf.getMap(Config.toPath(
+					new String[]{ profilePath, "http.customHeaders" })
+				));
+		}
+
+		headers.forEach((key, value) -> {
 
 			if ((value instanceof Integer)) {
-				response.setIntHeader((String) key, (Integer) value);
+				response.addIntHeader((String) key, (Integer) value);
 			} else if ((value instanceof Long)) {
-				response.setDateHeader((String) key, (Long) value);
+				response.addDateHeader((String) key, (Long) value);
 			} else {
-				response.setHeader((String) key, (String) value);
+				String data;
+
+				try {
+					data = value.toString();
+				} catch (Exception ignored) {
+					try {
+						data = (String) value;
+					} catch (Exception ignored1) {
+						data = null;
+					}
+				}
+
+				if (data != null) {
+					response.addHeader((String) key, data);
+				}
 			}
 
 		});
 		//endregion
+
+		response.getHeaderNames().forEach((value) ->
+			System.out.println(value + " = " + response.getHeader(value)));
 
 		baseRequest.setHandled(true);
 	}

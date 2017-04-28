@@ -89,9 +89,10 @@ class ModuleView {
 		if (config == null) {
 			return "null";
 		}
+
 		if (config.checkPath("description")) {
 			return Functions.implode(
-				(String[]) config.getArrayList("description").toArray(), "\n");
+				config.getArrayList("description"), "\n");
 		} else {
 			return "null";
 		}

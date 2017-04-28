@@ -1,0 +1,104 @@
+<!--
+  ~ Copyright (C) 2017 - Protium - Ussoltsev Dmitry, Jankurazov Ruslan - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<!--suppress ALL -->
+<md-dialog>
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>Register</h2>
+			<span flex></span>
+			<md-button ng-click="close()" class="md-icon-button">
+				<md-icon class="material-icons md-18">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	<form ng-cloak name="user">
+		<md-dialog-content>
+			<div class="md-dialog-content" layout="column">
+				<div flex layout="row">
+					<md-input-container flex>
+						<label>Username</label>
+						<md-icon class="material-icons md-18">person</md-icon>
+						<input
+								ng-model="user.login"
+								ng-pattern="'[a-zA-Z][0-9a-zA-Z-_.]{2,}[a-zA-Z0-9]'"
+								md-maxlength="48"
+								required>
+					</md-input-container>
+					<md-input-container flex="70">
+						<label>E-Mail</label>
+						<md-icon class="md-18">&nbsp;</md-icon>
+						<input
+								type="email"
+								ng-model="user.email"
+								md-maxlength="120"
+								ng-minlength="6"
+								required>
+					</md-input-container>
+				</div>
+				<div flex layout="row">
+					<md-input-container flex>
+						<label>Password</label>
+						<md-icon class="material-icons md-18">lock</md-icon>
+						<input
+
+								type="password"
+								ng-blur="validateRepass()"
+								ng-model="user.password"
+								ng-minlength="8"
+								md-maxlength="60"
+								required>
+					</md-input-container>
+					<md-input-container flex>
+						<label>Password again</label>
+						<md-icon class="material-icons md-18">&nbsp;</md-icon>
+						<input
+								type="password"
+								ng-blur="validateRepass()"
+								ng-model="user.repassword"
+								ng-minlength="8"
+								md-maxlength="60"
+								required>
+					</md-input-container>
+				</div>
+				<div flex layout="row">
+					<md-input-container flex>
+						<label>First name</label>
+						<md-icon class="material-icons md-18">person</md-icon>
+						<input
+								md-maxlength="60"
+								ng-model="user.first_name">
+					</md-input-container>
+					<md-input-container flex="20">
+						<md-icon class="md-18">&nbsp;</md-icon>
+						<label>Middle name</label>
+						<input
+								md-maxlength="60"
+								ng-model="user.middle_name">
+					</md-input-container>
+					<md-input-container flex>
+						<md-icon class="md-18">&nbsp;</md-icon>
+						<label>Last name</label>
+						<input
+								md-maxlength="60"
+								ng-model="user.last_name">
+					</md-input-container>
+				</div>
+				<div flex layout="row">
+					<md-input-container flex>
+						<md-checkbox required>
+							I accept <a href="#{{usage}}">usage terms</a> of this service.
+						</md-checkbox>
+					</md-input-container>
+				</div>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions>
+			<md-button class="secondary" ng-click="reset()">Reset</md-button>
+			<md-button class="md-primary" ng-click="commit()">Confirm</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

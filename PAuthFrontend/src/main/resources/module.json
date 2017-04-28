@@ -1,0 +1,13 @@
+{
+	"id": "PAuthFrontend-AM",
+	"name": "PAuthFrontend AM Edition - Part of PAuth",
+	"version": "v0.0.1/dev",
+	"author": "Protium Team - Ussoltsev",
+	"description": [
+		"PAuth",
+		"Default auth system from Protium developers.",
+		"=========",
+		"PAuth Frontend AM Edition works on Angular Material web-framework."
+	],
+	"mainClass": "net.protium.modules.pauth.frontend.core.PAuthFrontend"
+}

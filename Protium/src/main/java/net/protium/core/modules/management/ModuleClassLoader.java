@@ -121,7 +121,7 @@ class ModuleClassLoader extends ClassLoader {
 				inputStream.close();
 
 			} catch (IOException e) {
-				return null;
+				continue;
 			}
 
 			return url;

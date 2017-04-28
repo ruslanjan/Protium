@@ -57,7 +57,7 @@ class Router extends AbstractRouter {
             try {
                 parser = new JSONParser(new File(path), "route")
             } catch (JsonException e) {
-                logger.log(Level.WARNING, "failed to read route file '$path'", e)
+	            logger.log(Level.WARNING, "failed to read route file '$path'. ${e.message}")
                 continue
             }
 

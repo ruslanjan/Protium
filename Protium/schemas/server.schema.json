@@ -25,6 +25,16 @@
 								},
 								"host": {
 									"type": "string"
+								},
+								"allowedOrigins": {
+								},
+								"customHeaders": {
+									"type": "object",
+									"patternProperties": {
+										"[\\s\\S]+": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -37,7 +47,13 @@
 							}
 						},
 						"moduleManager": {
-							"type": "object"
+							"type": "object",
+							"properties": {
+								"reloadInterval": {
+									"type": "integer"
+								}
+							}
+
 						}
 					},
 					"required": [ "http", "router", "moduleManager" ]

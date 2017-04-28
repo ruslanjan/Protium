@@ -9,7 +9,7 @@ In PACKAGE_NAME
 From temporary-protium
 */
 
-import net.protium.modules.pauth.database.UserManager;
+import net.protium.modules.pauth.backend.database.UserManager;
 
 public class Test {
 

@@ -19,7 +19,7 @@ In ${PACKAGE_NAME}
 From temporary-protium
 */
 public class JsonSchemaHelper {
-	public JsonNode getJsonNodeFromClasspath(String name) throws Exception {
+	static public JsonNode getJsonNodeFromClasspath(String name) throws Exception {
 		InputStream is1 = Thread.currentThread().getContextClassLoader()
 			.getResourceAsStream(name);
 
@@ -27,34 +27,34 @@ public class JsonSchemaHelper {
 		return mapper.readTree(is1);
 	}
 
-	public JsonNode getJsonNodeFromStringContent(String content) throws Exception {
+	static public JsonNode getJsonNodeFromStringContent(String content) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readTree(content);
 	}
 
-	public JsonNode getJsonNodeFromUrl(URL url) throws Exception {
+	static public JsonNode getJsonNodeFromUrl(URL url) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readTree(url);
 	}
 
-	public JsonSchema getJsonSchemaFromClasspath(String name) throws Exception {
+	static public JsonSchema getJsonSchemaFromClasspath(String name) throws Exception {
 		JsonSchemaFactory factory = new JsonSchemaFactory();
 		InputStream is = Thread.currentThread().getContextClassLoader()
 			.getResourceAsStream(name);
 		return factory.getSchema(is);
 	}
 
-	public JsonSchema getJsonSchemaFromStringContent(String schemaContent) throws Exception {
+	static public JsonSchema getJsonSchemaFromStringContent(String schemaContent) throws Exception {
 		JsonSchemaFactory factory = new JsonSchemaFactory();
 		return factory.getSchema(schemaContent);
 	}
 
-	public JsonSchema getJsonSchemaFromUrl(URL url) throws Exception {
+	static public JsonSchema getJsonSchemaFromUrl(URL url) throws Exception {
 		JsonSchemaFactory factory = new JsonSchemaFactory();
 		return factory.getSchema(url);
 	}
 
-	public JsonSchema getJsonSchemaFromJsonNode(JsonNode jsonNode) throws Exception {
+	static public JsonSchema getJsonSchemaFromJsonNode(JsonNode jsonNode) throws Exception {
 		JsonSchemaFactory factory = new JsonSchemaFactory();
 		return factory.getSchema(jsonNode);
 	}

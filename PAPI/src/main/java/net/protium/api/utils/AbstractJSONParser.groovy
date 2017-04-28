@@ -71,6 +71,7 @@ class AbstractJSONParser {
 
 			Set errors = schema.validate(node)
 
+
 			return errors
 		} catch (Exception ignored) {
 			new HashSet()
