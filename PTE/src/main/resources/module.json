@@ -1,0 +1,12 @@
+{
+	"id": "LibPTE/Basic",
+	"mainClass": "net.protium.modules.pte.Responder",
+	"name": "PTE library",
+	"description": [
+		"LibPTE is Protium template engine based on FreeMarker template engine.",
+		"LibPTE is a public library, not callable module. So it hasn't any route actions!",
+		"",
+		"Note: LibPTE is written in Groovy"
+	],
+	"author": "Protium Team"
+}
