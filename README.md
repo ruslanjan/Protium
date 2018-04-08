@@ -1,4 +1,4 @@
-# protium
+# Protium
 Meet Protium Protium is a web-development platform that encourages 
 rapid development and clean, pragmatic design. With Protium you can 
 take Web applications from concept to launch in a matter of hours. 
